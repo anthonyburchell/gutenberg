@@ -51,6 +51,60 @@ const getGalleryDetailsMediaFrame = () => {
 	} );
 };
 
+const getPlaylistDetailsMediaFrame = () => {
+	/**
+	 * Custom Playlist details frame.
+	 *
+	 * @link https://github.com/xwp/wp-core-media-widgets/blob/905edbccfc2a623b73a93dac803c5335519d7837/wp-admin/js/widgets/media-gallery-widget.js
+	 * @class PlaylistDetailsMediaFrame
+	 * @constructor
+	 */
+	return wp.media.view.MediaFrame.Post.extend( {
+
+		/**
+		 * Create the default states.
+		 *
+		 * @returns {void}
+		 */
+		createStates: function createStates() {
+			this.states.add( [
+				new wp.media.controller.Library( {
+					id: 'playlist',
+					title: wp.media.view.l10n.createPlaylistTitle,
+					priority: 60,
+					toolbar: 'main-playlist',
+					filterable: 'uploaded',
+					multiple: 'add',
+					editable: false,
+
+					library: wp.media.query( _.defaults( {
+						type: 'audio',
+					}, this.options.library ) ),
+				} ),
+
+				new wp.media.controller.CollectionEdit( {
+					type: 'audio',
+					collectionType: 'playlist',
+					title:          wp.media.view.l10n.editPlaylistTitle,
+					SettingsView:   wp.media.view.Settings.Playlist,
+					library:        this.options.selection,
+					editing:        this.options.editing,
+					menu:           'playlist',
+					dragInfoText:   wp.media.view.l10n.playlistDragInfo,
+					dragInfo:       true
+				} ),
+
+				new wp.media.controller.CollectionAdd( {
+					type: 'audio',
+					collectionType: 'playlist',
+					title: wp.media.view.l10n.addToPlaylistTitle
+				}	),
+			] );
+		},
+	} );
+};
+
+
 // the media library image object contains numerous attributes
 // we only need this set to display the image in the library
 const slimImageObject = ( img ) => {
@@ -59,7 +113,7 @@ const slimImageObject = ( img ) => {
 };
 
 class MediaUploadButton extends Component {
-	constructor( { multiple = false, type, gallery = false, title = __( 'Select or Upload Media' ), modalClass } ) {
+	constructor( { multiple = false, type, gallery = false, playlist = false, title = __( 'Select or Upload Media' ), modalClass } ) {
 		super( ...arguments );
 		this.openModal = this.openModal.bind( this );
 		this.onSelect = this.onSelect.bind( this );
@@ -76,7 +130,6 @@ class MediaUploadButton extends Component {
 		if ( !! type ) {
 			frameConfig.library = { type };
 		}
-
 		if ( gallery ) {
 			const GalleryDetailsMediaFrame = getGalleryDetailsMediaFrame();
 			this.frame = new GalleryDetailsMediaFrame( {
@@ -85,7 +138,17 @@ class MediaUploadButton extends Component {
 				state: 'gallery',
 			} );
 			wp.media.frame = this.frame;
-		} else {
+		}
+		if ( playlist ) {
+			const PlaylistDetailsMediaFrame = getPlaylistDetailsMediaFrame();
+			this.frame = new PlaylistDetailsMediaFrame( {
+				frame: 'select',
+				mimeType: type,
+				state: 'playlist',
+			} );
+			wp.media.frame = this.frame;
+		}
+		else {
 			this.frame = wp.media( frameConfig );
 		}
 
