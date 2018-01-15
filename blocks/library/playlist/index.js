@@ -78,13 +78,14 @@ registerBlockType( 'core/playlist', {
 			const onSelectAudio = ( media ) => {
 				// debug logging urls for work on 805 gutenberg issue
 				for (var mediaObject in media) {
-					console.log(media[mediaObject].url);
+					setAttributes( { src: media[mediaObject].url, id: media[mediaObject].id } );
 				}
-				if ( media && media.url ) {
+				console.log(media);
+
+				if ( media && media[0].url ) {
 					// sets the block's attribure and updates the edit component from the
 					// selected media, then switches off the editing UI
-					setAttributes( { src: media.url, id: media.id } );
-					this.setState( { src: media.url, editing: false } );
+					this.setState( { src: media[0].url, editing: false } );
 				}
 			};
 			const controls = focus && (
