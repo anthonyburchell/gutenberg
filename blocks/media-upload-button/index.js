@@ -93,6 +93,7 @@ const getPlaylistDetailsMediaFrame = () => {
 					dragInfoText:   wp.media.view.l10n.playlistDragInfo,
 					dragInfo:       true
 				} ),
+
 				new wp.media.controller.CollectionAdd( {
 					type: 'audio',
 					collectionType: 'playlist',

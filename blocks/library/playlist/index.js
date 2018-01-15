@@ -76,6 +76,10 @@ registerBlockType( 'core/playlist', {
 				this.setState( { editing: true } );
 			};
 			const onSelectAudio = ( media ) => {
+				// debug logging urls for work on 805 gutenberg issue
+				for (var mediaObject in media) {
+					console.log(media[mediaObject].url);
+				}
 				if ( media && media.url ) {
 					// sets the block's attribure and updates the edit component from the
 					// selected media, then switches off the editing UI
