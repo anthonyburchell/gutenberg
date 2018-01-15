@@ -83,15 +83,6 @@ registerBlockType( 'core/playlist', {
 					this.setState( { src: media.url, editing: false } );
 				}
 			};
-			const onSelectUrl = ( event ) => {
-				event.preventDefault();
-				if ( src ) {
-					// set the block's src from the edit component's state, and switch off the editing UI
-					setAttributes( { src } );
-					this.setState( { editing: false } );
-				}
-				return false;
-			};
 			const controls = focus && (
 				<BlockControls key="controls">
 					<BlockAlignmentToolbar

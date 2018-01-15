@@ -93,12 +93,44 @@ const getPlaylistDetailsMediaFrame = () => {
 					dragInfoText:   wp.media.view.l10n.playlistDragInfo,
 					dragInfo:       true
 				} ),
-
 				new wp.media.controller.CollectionAdd( {
 					type: 'audio',
 					collectionType: 'playlist',
 					title: wp.media.view.l10n.addToPlaylistTitle
 				}	),
+
+				new wp.media.controller.Library( {
+					id: 'video-playlist',
+					title: wp.media.view.l10n.createVideoPlaylistTitle,
+					priority: 60,
+					toolbar: 'main-video-playlist',
+					filterable: 'uploaded',
+					multiple: 'add',
+					editable: false,
+
+					library: wp.media.query( _.defaults( {
+						type: 'video',
+					}, this.options.library ) ),
+				} ),
+
+				new wp.media.controller.CollectionEdit( {
+					type: 'video',
+					collectionType: 'playlist',
+					title:          wp.media.view.l10n.editVideoPlaylistTitle,
+					SettingsView:   wp.media.view.Settings.Playlist,
+					library:        this.options.selection,
+					editing:        this.options.editing,
+					menu:           'video-playlist',
+					dragInfoText:   wp.media.view.l10n.videoPlaylistDragInfo,
+					dragInfo:       false
+				} ),
+
+				new wp.media.controller.CollectionAdd( {
+					type: 'video',
+					collectionType: 'playlist',
+					title: wp.media.view.l10n.addToVideoPlaylistTitle
+				}	),
+
 			] );
 		},
 	} );
