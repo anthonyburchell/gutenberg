@@ -68,7 +68,7 @@ registerBlockType( 'core/playlist', {
 			};
 		}
 		render() {
-			const { align, caption, id } = this.props.attributes;
+			const { align, caption, id, playlistType } = this.props.attributes;
 			const { setAttributes, focus, setFocus } = this.props;
 			const { editing, className, src } = this.state;
 			const updateAlignment = ( nextAlign ) => setAttributes( { align: nextAlign } );
@@ -78,14 +78,13 @@ registerBlockType( 'core/playlist', {
 			const onSelectAudio = ( media ) => {
 				// debug logging urls for work on 805 gutenberg issue
 				for (var mediaObject in media) {
-					setAttributes( { src: media[mediaObject].url, id: media[mediaObject].id } );
+					setAttributes( { src: media[mediaObject].url, id: media[mediaObject].id, playlistType: media[mediaObject].type } );
 				}
-				console.log(media);
 
 				if ( media && media[0].url ) {
-					// sets the block's attribure and updates the edit component from the
+					// sets the block's attribute and updates the edit component from the
 					// selected media, then switches off the editing UI
-					this.setState( { src: media[0].url, editing: false } );
+					this.setState( { src: media[0].url, editing: false, playlistType: media[0].type } );
 				}
 			};
 			const controls = focus && (
@@ -131,34 +130,69 @@ registerBlockType( 'core/playlist', {
 			}
 
 			/* eslint-disable jsx-a11y/no-static-element-interactions, jsx-a11y/onclick-has-role, jsx-a11y/click-events-have-key-events */
-			return [
-				controls,
-				<figure key="audio" className={ className }>
-					<audio controls="controls" src={ src } />
-					{ ( ( caption && caption.length ) || !! focus ) && (
-						<Editable
-							tagName="figcaption"
-							placeholder={ __( 'Write caption…' ) }
-							value={ caption }
-							focus={ focus && focus.editable === 'caption' ? focus : undefined }
-							onFocus={ focusCaption }
-							onChange={ ( value ) => setAttributes( { caption: value } ) }
-							inlineToolbar
-						/>
-					) }
-				</figure>,
-			];
+			if (playlistType == "audio"){
+				return [
+					controls,
+					<figure key="audio" className={ className }>
+						<audio controls="controls" src={ src } />
+						{ ( ( caption && caption.length ) || !! focus ) && (
+							<Editable
+								tagName="figcaption"
+								placeholder={ __( 'Write caption…' ) }
+								value={ caption }
+								focus={ focus && focus.editable === 'caption' ? focus : undefined }
+								onFocus={ focusCaption }
+								onChange={ ( value ) => setAttributes( { caption: value } ) }
+								inlineToolbar
+							/>
+						) }
+					</figure>,
+				];
+			}
+
+			if (playlistType == "video"){
+				return [
+					controls,
+					<figure key="video" className={ className }>
+						<video controls="controls" src={ src } />
+						{ ( ( caption && caption.length ) || !! focus ) && (
+							<Editable
+								tagName="figcaption"
+								placeholder={ __( 'Write caption…' ) }
+								value={ caption }
+								focus={ focus && focus.editable === 'caption' ? focus : undefined }
+								onFocus={ focusCaption }
+								onChange={ ( value ) => setAttributes( { caption: value } ) }
+								inlineToolbar
+							/>
+						) }
+					</figure>,
+				];
+			}
+
 			/* eslint-enable jsx-a11y/no-static-element-interactions, jsx-a11y/onclick-has-role, jsx-a11y/click-events-have-key-events */
 		}
 	},
 
 	save( { attributes } ) {
-		const { align, src, caption } = attributes;
-		return (
-			<figure className={ align ? `align${ align }` : null }>
-				<audio controls="controls" src={ src } />
-				{ caption && caption.length > 0 && <figcaption>{ caption }</figcaption> }
-			</figure>
-		);
+		const { align, src, caption, playlistType } = attributes;
+
+		if (playlistType == "audio"){
+			return (
+				<figure className={ align ? `align${ align }` : null }>
+					<audio controls="controls" src={ src } />
+					{ caption && caption.length > 0 && <figcaption>{ caption }</figcaption> }
+				</figure>
+			);
+		}
+
+		if (playlistType == "video"){
+			return (
+				<figure className={ align ? `align${ align }` : null }>
+					<video controls="controls" src={ src } />
+					{ caption && caption.length > 0 && <figcaption>{ caption }</figcaption> }
+				</figure>
+			);
+		}
 	},
 } );
