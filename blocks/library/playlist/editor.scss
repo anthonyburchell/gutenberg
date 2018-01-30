@@ -1,8 +1,8 @@
-.wp-block-audio .components-placeholder__input {
+.wp-block-audio .components-placeholder__input, .wp-block-video .components-placeholder__input {
 	margin-top: 0.5em;
 }
 
-.wp-block-audio .button.button-large {
+.wp-block-audio .button.button-large, .wp-block-video .button.button-large {
 	margin-top: 0.5em;
 }
 
@@ -10,7 +10,7 @@
 	width: 100%;
 }
 
-.wp-block-audio .components-placeholder__fieldset {
+.wp-block-audio .components-placeholder__fieldset, .wp-block-video .components-placeholder__fieldset {
 	display: block;
 	max-width: 400px;
 

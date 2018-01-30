@@ -145,6 +145,12 @@ const slimImageObject = ( img ) => {
 	return pick( img, attrSet );
 };
 
+const playlistItemObject = ( playlistMedia ) => {
+	const attrSet = [ 'sizes', 'mime', 'type', 'subtype', 'id', 'url', 'link', 'caption', 'album', 'artist', 'image', 'title'];
+	return pick( playlistMedia, attrSet );
+};
+
+
 class MediaUploadButton extends Component {
 	constructor( { multiple = false, type, gallery = false, playlist = false, title = __( 'Select or Upload Media' ), modalClass } ) {
 		super( ...arguments );
@@ -200,7 +206,7 @@ class MediaUploadButton extends Component {
 	}
 
 	onUpdate( selections ) {
-		const { onSelect, multiple = false } = this.props;
+		const { onSelect, multiple, playlist = false } = this.props;
 		const state = this.frame.state();
 		const selectedImages = selections || state.get( 'selection' );
 
@@ -208,7 +214,11 @@ class MediaUploadButton extends Component {
 			return;
 		}
 		if ( multiple ) {
-			onSelect( selectedImages.models.map( ( model ) => slimImageObject( model.toJSON() ) ) );
+			if ( playlist ) {
+				onSelect( selectedImages.models.map( ( model ) => playlistItemObject( model.toJSON() ) ) );
+			} else {
+				onSelect( selectedImages.models.map( ( model ) => slimImageObject( model.toJSON() ) ) );
+			}
 		} else {
 			onSelect( slimImageObject( selectedImages.models[ 0 ].toJSON() ) );
 		}

@@ -68,7 +68,7 @@ registerBlockType( 'core/playlist', {
 			};
 		}
 		render() {
-			const { align, caption, id, playlistType } = this.props.attributes;
+			const { align, caption, id, album, artist, image, title, playlistType } = this.props.attributes;
 			const { setAttributes, focus, setFocus } = this.props;
 			const { editing, className, src } = this.state;
 			const updateAlignment = ( nextAlign ) => setAttributes( { align: nextAlign } );
@@ -77,10 +77,10 @@ registerBlockType( 'core/playlist', {
 			};
 			const onSelectAudio = ( media ) => {
 				// debug logging urls for work on 805 gutenberg issue
+				console.log(media);
 				for (var mediaObject in media) {
-					setAttributes( { src: media[mediaObject].url, id: media[mediaObject].id, playlistType: media[mediaObject].type } );
+					setAttributes( { src: media[mediaObject].url, id: media[mediaObject].id, album: media[mediaObject].album, artist: media[mediaObject].artist, image: media[mediaObject].image, title: media[mediaObject].title, caption: media[mediaObject].caption, playlistType: media[mediaObject].type } );
 				}
-
 				if ( media && media[0].url ) {
 					// sets the block's attribute and updates the edit component from the
 					// selected media, then switches off the editing UI
@@ -174,10 +174,12 @@ registerBlockType( 'core/playlist', {
 		}
 	},
 
+
 	save( { attributes } ) {
-		const { align, src, caption, playlistType } = attributes;
+		const { align, src, album, artist, image, title, caption, playlistType } = attributes;
 
 		if (playlistType == "audio"){
+			console.log(attributes);
 			return (
 				<figure className={ align ? `align${ align }` : null }>
 					<audio controls="controls" src={ src } />
