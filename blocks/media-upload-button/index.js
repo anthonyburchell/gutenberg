@@ -144,7 +144,7 @@ const slimImageObject = ( img ) => {
 	const attrSet = [ 'sizes', 'mime', 'type', 'subtype', 'id', 'url', 'alt', 'link' ];
 	return pick( img, attrSet );
 };
-
+// the playlist object contains attributes required for render. These will be used for playlist
 const playlistItemObject = ( playlistMedia ) => {
 	const attrSet = [ 'sizes', 'mime', 'type', 'subtype', 'id', 'url', 'link', 'caption', 'album', 'artist', 'image', 'title'];
 	return pick( playlistMedia, attrSet );
