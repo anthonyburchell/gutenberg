@@ -104,8 +104,6 @@ registerBlockType( 'core/playlist', {
 				</BlockControls>
 			);
 
-			//const focusCaption = ( focusValue ) => setFocus( { editable: 'caption', ...focusValue } );
-
 			if ( editing ) {
 				return [
 					controls,
