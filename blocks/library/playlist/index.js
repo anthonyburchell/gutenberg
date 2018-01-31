@@ -77,7 +77,7 @@ registerBlockType( 'core/playlist', {
 			};
 			const onSelectAudio = ( media ) => {
 				// debug logging urls for work on 805 gutenberg issue
-				console.log(media);
+				//console.log(media);
 				for (var mediaObject in media) {
 					setAttributes( { src: media[mediaObject].url, id: media[mediaObject].id, album: media[mediaObject].album, artist: media[mediaObject].artist, image: media[mediaObject].image, title: media[mediaObject].title, caption: media[mediaObject].caption, playlistType: media[mediaObject].type } );
 				}
@@ -104,7 +104,7 @@ registerBlockType( 'core/playlist', {
 				</BlockControls>
 			);
 
-			const focusCaption = ( focusValue ) => setFocus( { editable: 'caption', ...focusValue } );
+			//const focusCaption = ( focusValue ) => setFocus( { editable: 'caption', ...focusValue } );
 
 			if ( editing ) {
 				return [
@@ -135,17 +135,7 @@ registerBlockType( 'core/playlist', {
 					controls,
 					<figure key="audio" className={ className }>
 						<audio controls="controls" src={ src } />
-						{ ( ( caption && caption.length ) || !! focus ) && (
-							<Editable
-								tagName="figcaption"
-								placeholder={ __( 'Write caption…' ) }
-								value={ caption }
-								focus={ focus && focus.editable === 'caption' ? focus : undefined }
-								onFocus={ focusCaption }
-								onChange={ ( value ) => setAttributes( { caption: value } ) }
-								inlineToolbar
-							/>
-						) }
+						{ caption && caption.length > 0 && <figcaption>{ caption }</figcaption> }
 					</figure>,
 				];
 			}
@@ -155,17 +145,7 @@ registerBlockType( 'core/playlist', {
 					controls,
 					<figure key="video" className={ className }>
 						<video controls="controls" src={ src } />
-						{ ( ( caption && caption.length ) || !! focus ) && (
-							<Editable
-								tagName="figcaption"
-								placeholder={ __( 'Write caption…' ) }
-								value={ caption }
-								focus={ focus && focus.editable === 'caption' ? focus : undefined }
-								onFocus={ focusCaption }
-								onChange={ ( value ) => setAttributes( { caption: value } ) }
-								inlineToolbar
-							/>
-						) }
+						{ caption && caption.length > 0 && <figcaption>{ caption }</figcaption> }
 					</figure>,
 				];
 			}
