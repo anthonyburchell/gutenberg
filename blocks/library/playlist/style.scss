@@ -11,3 +11,8 @@
 	text-align: center;
 	font-size: $default-font-size;
 }
+
+.wp-playlist audio {
+	display: inline-block !important;
+	width:100% !important;
+}
