@@ -45,7 +45,7 @@ registerBlockType( 'core/playlist', {
 			selector: 'figcaption',
 		},
 		id: {
-			type: 'number',
+			type: 'array',
 		},
 	},
 
@@ -75,11 +75,18 @@ registerBlockType( 'core/playlist', {
 			const switchToEditing = () => {
 				this.setState( { editing: true } );
 			};
+			const trackList = ( media ) => {
+				console.log("doing trackList");
+				for (var mediaObject of media) {
+					<span className="wp-playlist-item-meta wp-playlist-item-title">
+					{ mediaObject.title }
+					</span>
+				}
+			}
 			const onSelectAudio = ( media ) => {
-				// debug logging urls for work on 805 gutenberg issue
-				//console.log(media);
-				for (var mediaObject in media) {
-					setAttributes( { src: media[mediaObject].url, id: media[mediaObject].id, album: media[mediaObject].album, artist: media[mediaObject].artist, image: media[mediaObject].image, title: media[mediaObject].title, caption: media[mediaObject].caption, playlistType: media[mediaObject].type } );
+				for (var mediaObject of media) {
+					console.log(mediaObject.title);
+					setAttributes( { src: mediaObject.url, id: mediaObject.id, album: mediaObject.album, artist: mediaObject.artist, image: mediaObject.image, title: mediaObject.title, caption: mediaObject.caption, playlistType: mediaObject.type } );
 				}
 				if ( media && media[0].url ) {
 					// sets the block's attribute and updates the edit component from the
@@ -103,7 +110,6 @@ registerBlockType( 'core/playlist', {
 					</Toolbar>
 				</BlockControls>
 			);
-
 			if ( editing ) {
 				return [
 					controls,
@@ -128,13 +134,36 @@ registerBlockType( 'core/playlist', {
 			}
 
 			/* eslint-disable jsx-a11y/no-static-element-interactions, jsx-a11y/onclick-has-role, jsx-a11y/click-events-have-key-events */
+			/* saving this for later { caption && caption.length > 0 && <figcaption>{ caption }</figcaption> } */
 			if (playlistType == "audio"){
 				return [
 					controls,
 					<figure key="audio" className={ className }>
+					<div className="wp-playlist wp-audio-playlist">
+					<div className="wp-playlist-current-item">
+					{ image && <img src={image.src}  alt="" /> }
+					<div className="wp-playlist-caption">
+					{ title &&
+							<span className="wp-playlist-item-meta wp-playlist-item-title">
+							{ title }
+							</span>
+					}
+					{ album &&
+						<span className="wp-playlist-item-meta wp-playlist-item-album">
+							{ album }
+						</span>
+					}
+					{ artist &&
+						<span className="wp-playlist-item-meta wp-playlist-item-artist">
+							{ artist }
+						</span>
+					}
+						</div>
+						</div>
 						<audio controls="controls" src={ src } />
-						{ caption && caption.length > 0 && <figcaption>{ caption }</figcaption> }
-					</figure>,
+						{ trackList }
+						</div>
+					</figure>
 				];
 			}
 
@@ -152,16 +181,38 @@ registerBlockType( 'core/playlist', {
 		}
 	},
 
+	/* saving this for later { caption && caption.length > 0 && <figcaption>{ caption }</figcaption> } */
 
 	save( { attributes } ) {
 		const { align, src, album, artist, image, title, caption, playlistType } = attributes;
 
 		if (playlistType == "audio"){
-			console.log(attributes);
 			return (
 				<figure className={ align ? `align${ align }` : null }>
-					<audio controls="controls" src={ src } />
-					{ caption && caption.length > 0 && <figcaption>{ caption }</figcaption> }
+				<div className="wp-playlist wp-audio-playlist">
+						<div className="wp-playlist-current-item">
+						{ image && <img src={image.src}  alt="" /> }
+						<div className="wp-playlist-caption">
+							{ title &&
+									<span className="wp-playlist-item-meta wp-playlist-item-title">
+									{ title }
+									</span>
+							}
+							{ album &&
+								<span className="wp-playlist-item-meta wp-playlist-item-album">
+									{ album }
+								</span>
+							}
+							{ artist &&
+								<span className="wp-playlist-item-meta wp-playlist-item-artist">
+									{ artist }
+								</span>
+							}
+						</div>
+				</div>
+				<audio controls="controls" src={ src } />
+				{ trackList }
+				</div>
 				</figure>
 			);
 		}
