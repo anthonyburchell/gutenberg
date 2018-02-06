@@ -47,6 +47,12 @@ registerBlockType( 'core/playlist', {
 		id: {
 			type: 'array',
 		},
+		mediaItems: {
+			type: 'array',
+		},
+		currentItem: {
+			type: 'array',
+		}
 	},
 
 	getEditWrapperProps( attributes ) {
@@ -64,36 +70,40 @@ registerBlockType( 'core/playlist', {
 			this.state = {
 				editing: ! this.props.attributes.src,
 				src: this.props.attributes.src,
+				mediaItems: this.props.attributes.mediaItems,
+				currentItem: this.props.attributes.currentItem,
 				className,
 			};
 		}
+
+
 		render() {
-			const { align, caption, id, album, artist, image, title, playlistType } = this.props.attributes;
+			const { align, caption, id, album, artist, image, title, playlistType, mediaItems, currentItem } = this.props.attributes;
 			const { setAttributes, focus, setFocus } = this.props;
 			const { editing, className, src } = this.state;
 			const updateAlignment = ( nextAlign ) => setAttributes( { align: nextAlign } );
 			const switchToEditing = () => {
 				this.setState( { editing: true } );
 			};
-			const trackList = ( media ) => {
-				console.log("doing trackList");
-				for (var mediaObject of media) {
-					<span className="wp-playlist-item-meta wp-playlist-item-title">
-					{ mediaObject.title }
-					</span>
-				}
-			}
+
 			const onSelectAudio = ( media ) => {
+				// xItems = [];
 				for (var mediaObject of media) {
-					console.log(mediaObject.title);
-					setAttributes( { src: mediaObject.url, id: mediaObject.id, album: mediaObject.album, artist: mediaObject.artist, image: mediaObject.image, title: mediaObject.title, caption: mediaObject.caption, playlistType: mediaObject.type } );
+					mediaObject.src = mediaObject.url;
+					mediaObject.playlistType = mediaObject.type;
 				}
+
 				if ( media && media[0].url ) {
 					// sets the block's attribute and updates the edit component from the
 					// selected media, then switches off the editing UI
+					setAttributes( {
+						mediaItems: media,
+						currentItem: media[0]
+					} );
 					this.setState( { src: media[0].url, editing: false, playlistType: media[0].type } );
 				}
 			};
+
 			const controls = focus && (
 				<BlockControls key="controls">
 					<BlockAlignmentToolbar
@@ -110,6 +120,7 @@ registerBlockType( 'core/playlist', {
 					</Toolbar>
 				</BlockControls>
 			);
+
 			if ( editing ) {
 				return [
 					controls,
@@ -135,44 +146,46 @@ registerBlockType( 'core/playlist', {
 
 			/* eslint-disable jsx-a11y/no-static-element-interactions, jsx-a11y/onclick-has-role, jsx-a11y/click-events-have-key-events */
 			/* saving this for later { caption && caption.length > 0 && <figcaption>{ caption }</figcaption> } */
-			if (playlistType == "audio"){
+			if (currentItem.playlistType == "audio"){
 				return [
 					controls,
 					<figure key="audio" className={ className }>
 					<div className="wp-playlist wp-audio-playlist">
 					<div className="wp-playlist-current-item">
-					{ image && <img src={image.src}  alt="" /> }
+					{ currentItem.image && <img src={ currentItem.image.src }  alt="" /> }
 					<div className="wp-playlist-caption">
-					{ title &&
+					{ currentItem.title &&
 							<span className="wp-playlist-item-meta wp-playlist-item-title">
-							{ title }
+							{ currentItem.title }
 							</span>
 					}
-					{ album &&
+					{ currentItem.album &&
 						<span className="wp-playlist-item-meta wp-playlist-item-album">
-							{ album }
+							{ currentItem.album }
 						</span>
 					}
-					{ artist &&
+					{ currentItem.artist &&
 						<span className="wp-playlist-item-meta wp-playlist-item-artist">
-							{ artist }
+							{ currentItem.artist }
 						</span>
 					}
 						</div>
 						</div>
 						<audio controls="controls" src={ src } />
-						{ trackList }
+						{mediaItems.map(function(mediaItem){
+												return <li key={ mediaItem.title }>{ mediaItem.title } </li>;
+											})}
 						</div>
 					</figure>
 				];
 			}
 
-			if (playlistType == "video"){
+			if (currentItem.playlistType == "video"){
 				return [
 					controls,
 					<figure key="video" className={ className }>
-						<video controls="controls" src={ src } />
-						{ caption && caption.length > 0 && <figcaption>{ caption }</figcaption> }
+						<video controls="controls" src={ currentItem.src } />
+						{ currentItem.caption && currentItem.caption.length > 0 && <figcaption>{ currentItem.caption }</figcaption> }
 					</figure>,
 				];
 			}
@@ -181,47 +194,47 @@ registerBlockType( 'core/playlist', {
 		}
 	},
 
-	/* saving this for later { caption && caption.length > 0 && <figcaption>{ caption }</figcaption> } */
-
 	save( { attributes } ) {
-		const { align, src, album, artist, image, title, caption, playlistType } = attributes;
+		const { align, src, album, artist, image, title, caption, playlistType, mediaItems, currentItem } = attributes;
 
-		if (playlistType == "audio"){
+		if (currentItem.playlistType == "audio"){
 			return (
 				<figure className={ align ? `align${ align }` : null }>
 				<div className="wp-playlist wp-audio-playlist">
 						<div className="wp-playlist-current-item">
-						{ image && <img src={image.src}  alt="" /> }
+						{ currentItem.image && <img src= { currentItem.image.src }  alt="" /> }
 						<div className="wp-playlist-caption">
-							{ title &&
+							{ currentItem.title &&
 									<span className="wp-playlist-item-meta wp-playlist-item-title">
-									{ title }
+									{ currentItem.title }
 									</span>
 							}
-							{ album &&
+							{ currentItem.album &&
 								<span className="wp-playlist-item-meta wp-playlist-item-album">
-									{ album }
+									{ currentItem.album }
 								</span>
 							}
-							{ artist &&
+							{ currentItem.artist &&
 								<span className="wp-playlist-item-meta wp-playlist-item-artist">
-									{ artist }
+									{ currentItem.artist }
 								</span>
 							}
 						</div>
 				</div>
-				<audio controls="controls" src={ src } />
-				{ trackList }
+				<audio controls="controls" src={ currentItem.src } />
+				{mediaItems.map(function(mediaItem){
+										return <li key={ mediaItem.title }>{ mediaItem.title } </li>;
+									})}
 				</div>
 				</figure>
 			);
 		}
 
-		if (playlistType == "video"){
+		if (currentItem.playlistType == "video"){
 			return (
 				<figure className={ align ? `align${ align }` : null }>
-					<video controls="controls" src={ src } />
-					{ caption && caption.length > 0 && <figcaption>{ caption }</figcaption> }
+					<video controls="controls" src={ currentItem.src } />
+					{ currentItem.caption && currentItem.caption.length > 0 && <figcaption>{ currentItem.caption }</figcaption> }
 				</figure>
 			);
 		}
