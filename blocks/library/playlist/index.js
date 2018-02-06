@@ -70,8 +70,6 @@ registerBlockType( 'core/playlist', {
 			this.state = {
 				editing: ! this.props.attributes.src,
 				src: this.props.attributes.src,
-				mediaItems: this.props.attributes.mediaItems,
-				currentItem: this.props.attributes.currentItem,
 				className,
 			};
 		}
@@ -100,6 +98,7 @@ registerBlockType( 'core/playlist', {
 						mediaItems: media,
 						currentItem: media[0]
 					} );
+					console.log(this.props.attributes);
 					this.setState( { src: media[0].url, editing: false, playlistType: media[0].type } );
 				}
 			};
@@ -172,9 +171,18 @@ registerBlockType( 'core/playlist', {
 						</div>
 						</div>
 						<audio controls="controls" src={ src } />
-						{mediaItems.map(function(mediaItem){
-												return <li key={ mediaItem.title }>{ mediaItem.title } </li>;
-											})}
+								<div className="wp-playlist-tracks">
+									{mediaItems.map(function(mediaItem){
+										return [
+											<div className="wp-playlist-item">
+												<a className="wp-playlist-caption" href= { mediaItem.url } key= { mediaItem.title } >
+													<span className="wp-playlist-item-title"> { mediaItem.title } </span>
+												</a>
+												<div className="wp-playlist-item-length"> { mediaItem.length_formatted } </div>
+											</div>
+										]
+									})}
+								</div>
 						</div>
 					</figure>
 				];
@@ -201,31 +209,40 @@ registerBlockType( 'core/playlist', {
 			return (
 				<figure className={ align ? `align${ align }` : null }>
 				<div className="wp-playlist wp-audio-playlist">
-						<div className="wp-playlist-current-item">
-						{ currentItem.image && <img src= { currentItem.image.src }  alt="" /> }
-						<div className="wp-playlist-caption">
-							{ currentItem.title &&
-									<span className="wp-playlist-item-meta wp-playlist-item-title">
-									{ currentItem.title }
-									</span>
-							}
-							{ currentItem.album &&
-								<span className="wp-playlist-item-meta wp-playlist-item-album">
-									{ currentItem.album }
-								</span>
-							}
-							{ currentItem.artist &&
-								<span className="wp-playlist-item-meta wp-playlist-item-artist">
-									{ currentItem.artist }
-								</span>
-							}
-						</div>
-				</div>
-				<audio controls="controls" src={ currentItem.src } />
-				{mediaItems.map(function(mediaItem){
-										return <li key={ mediaItem.title }>{ mediaItem.title } </li>;
-									})}
-				</div>
+				<div className="wp-playlist-current-item">
+				{ currentItem.image && <img src={ currentItem.image.src }  alt="" /> }
+				<div className="wp-playlist-caption">
+				{ currentItem.title &&
+						<span className="wp-playlist-item-meta wp-playlist-item-title">
+						{ currentItem.title }
+						</span>
+				}
+				{ currentItem.album &&
+					<span className="wp-playlist-item-meta wp-playlist-item-album">
+						{ currentItem.album }
+					</span>
+				}
+				{ currentItem.artist &&
+					<span className="wp-playlist-item-meta wp-playlist-item-artist">
+						{ currentItem.artist }
+					</span>
+				}
+					</div>
+					</div>
+					<audio controls="controls" src={ src } />
+							<div className="wp-playlist-tracks">
+								{mediaItems.map(function(mediaItem){
+									return [
+										<div className="wp-playlist-item">
+											<a className="wp-playlist-caption" href= { mediaItem.url } key= { mediaItem.title } >
+												<span className="wp-playlist-item-title"> { mediaItem.title } </span>
+											</a>
+											<div className="wp-playlist-item-length"> { mediaItem.length_formatted } </div>
+										</div>
+									]
+								})}
+							</div>
+					</div>
 				</figure>
 			);
 		}
