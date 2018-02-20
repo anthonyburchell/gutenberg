@@ -1,16 +1,16 @@
 /**
  * External Dependencies
  */
-import 'mediaelement';
+//import 'mediaelement';
 
 // Import stylesheet and shims
-import 'mediaelement/build/mediaelementplayer.min.css';
+//import 'mediaelement/build/mediaelementplayer.min.css';
 //may not need to import the swf file
 //import 'mediaelement/build/mediaelement-flash-video.swf';
 
 export default class MediaElement extends Component {
 
-	state = {}
+	//state = {}
 
 	success(media, node, instance) {
 		// Your action when media was successfully loaded
