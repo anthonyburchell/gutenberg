@@ -1,12 +1,13 @@
 /**
  * External dependencies
  */
+//import MediaElement from 'MediaElement';
 
 /**
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { Button, IconButton, Placeholder, Toolbar } from '@wordpress/components';
+import { Button, IconButton, Placeholder, Toolbar, MediaElement } from '@wordpress/components';
 import { Component } from '@wordpress/element';
 
 /**
