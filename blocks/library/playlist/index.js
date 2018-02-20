@@ -10,6 +10,7 @@ import { __ } from '@wordpress/i18n';
 import { Button, IconButton, Placeholder, Toolbar, MediaElement } from '@wordpress/components';
 import { Component } from '@wordpress/element';
 
+
 /**
  * Internal dependencies
  */
