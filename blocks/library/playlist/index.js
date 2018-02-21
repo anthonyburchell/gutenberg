@@ -81,6 +81,7 @@ registerBlockType( 'core/playlist', {
 			const { align, caption, id, album, artist, image, title, playlistType, mediaItems, currentItem } = this.props.attributes;
 			const { setAttributes, focus, setFocus } = this.props;
 			const { editing, className, src } = this.state;
+
 			const updateAlignment = ( nextAlign ) => setAttributes( { align: nextAlign } );
 			const switchToEditing = () => {
 				this.setState( { editing: true } );
@@ -151,41 +152,18 @@ registerBlockType( 'core/playlist', {
 				return [
 					controls,
 					<figure key="audio" className={ className }>
-					<div className="wp-playlist wp-audio-playlist">
-					<div className="wp-playlist-current-item">
-					{ currentItem.image && <img src={ currentItem.image.src }  alt="" /> }
-					<div className="wp-playlist-caption">
-					{ currentItem.title &&
-							<span className="wp-playlist-item-meta wp-playlist-item-title">
-							{ currentItem.title }
-							</span>
-					}
-					{ currentItem.album &&
-						<span className="wp-playlist-item-meta wp-playlist-item-album">
-							{ currentItem.album }
-						</span>
-					}
-					{ currentItem.artist &&
-						<span className="wp-playlist-item-meta wp-playlist-item-artist">
-							{ currentItem.artist }
-						</span>
-					}
-						</div>
-						</div>
-						<audio controls="controls" src={ src } />
-								<div className="wp-playlist-tracks">
-									{mediaItems.map(function(mediaItem){
-										return [
-											<div className="wp-playlist-item">
-												<a className="wp-playlist-caption" href= { mediaItem.url } key= { mediaItem.title } >
-													<span className="wp-playlist-item-title"> { mediaItem.title } </span>
-												</a>
-												<div className="wp-playlist-item-length"> { mediaItem.length_formatted } </div>
-											</div>
-										]
-									})}
-								</div>
-						</div>
+					<MediaElement
+					 id="player1"
+					 mediaType="audio"
+					 preload="auto"
+					 controls
+					 width="640"
+					 height="360"
+					 poster=""
+					 sources={JSON.stringify(mediaItems)}
+				   options={JSON.stringify(mediaItems)}
+				   tracks={JSON.stringify(mediaItems)}
+					/>
 					</figure>
 				];
 			}
@@ -210,41 +188,18 @@ registerBlockType( 'core/playlist', {
 		if (currentItem.playlistType == "audio"){
 			return (
 				<figure className={ align ? `align${ align }` : null }>
-				<div className="wp-playlist wp-audio-playlist">
-				<div className="wp-playlist-current-item">
-				{ currentItem.image && <img src={ currentItem.image.src }  alt="" /> }
-				<div className="wp-playlist-caption">
-				{ currentItem.title &&
-						<span className="wp-playlist-item-meta wp-playlist-item-title">
-						{ currentItem.title }
-						</span>
-				}
-				{ currentItem.album &&
-					<span className="wp-playlist-item-meta wp-playlist-item-album">
-						{ currentItem.album }
-					</span>
-				}
-				{ currentItem.artist &&
-					<span className="wp-playlist-item-meta wp-playlist-item-artist">
-						{ currentItem.artist }
-					</span>
-				}
-					</div>
-					</div>
-					<audio controls="controls" src={ src } />
-							<div className="wp-playlist-tracks">
-								{mediaItems.map(function(mediaItem){
-									return [
-										<div className="wp-playlist-item">
-											<a className="wp-playlist-caption" href= { mediaItem.url } key= { mediaItem.title } >
-												<span className="wp-playlist-item-title"> { mediaItem.title } </span>
-											</a>
-											<div className="wp-playlist-item-length"> { mediaItem.length_formatted } </div>
-										</div>
-									]
-								})}
-							</div>
-					</div>
+					<MediaElement
+					 id="player1"
+					 mediaType="audio"
+					 preload="auto"
+					 controls
+					 width="640"
+					 height="360"
+					 poster=""
+					 sources={JSON.stringify(mediaItems)}
+					 options={JSON.stringify(mediaItems)}
+					 tracks={JSON.stringify(mediaItems)}
+					/>
 				</figure>
 			);
 		}
