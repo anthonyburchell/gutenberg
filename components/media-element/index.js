@@ -60,7 +60,7 @@ export default class MediaElement extends Component {
 					${(props.controls ? ' controls' : '')}${(props.preload ? ` preload="${props.preload}"` : '')}>
 					${mediaBody}
 				</video>` :
-				`<audio id="${props.id}" width="${props.width}" controls>
+				`<audio id="${props.id}" width="${props.width}" src="${props.src}" controls>
 					${mediaBody}
 				</audio>`
 		;
