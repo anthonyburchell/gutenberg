@@ -39,12 +39,18 @@ export default class MediaElement extends Component {
 			sources = JSON.parse(props.sources),
 			tracks = JSON.parse(props.tracks),
 			sourceTags = [],
-			tracksTags = []
+			tracksTags = [],
+			trackListing = []
 		;
 
 		for (let i = 0, total = sources.length; i < total; i++) {
 			const source = sources[i];
 			sourceTags.push(`<source src="${source.src}" type="${source.type}">`);
+		}
+
+		for (let i = 0, total = sources.length; i < total; i++) {
+			const source = sources[i];
+			trackListing.push(`<li>${source.title}</li>`);
 		}
 
 		for (let i = 0, total = tracks.length; i < total; i++) {
@@ -53,6 +59,7 @@ export default class MediaElement extends Component {
 		}
 
 		const
+			mediaPlaylist = `${trackListing.join("\n")}`,
 			mediaBody = `${sourceTags.join("\n")}
 				${tracksTags.join("\n")}`,
 			mediaHtml = props.mediaType === 'video' ?
@@ -62,7 +69,8 @@ export default class MediaElement extends Component {
 				</video>` :
 				`<audio id="${props.id}" width="${props.width}" src="${props.src}" controls>
 					${mediaBody}
-				</audio>`
+				</audio>
+				${mediaPlaylist}`
 		;
 
 		return (<div dangerouslySetInnerHTML={{__html: mediaHtml}}></div>);

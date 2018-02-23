@@ -72,7 +72,7 @@ registerBlockType( 'core/playlist', {
 			this.state = {
 				editing: ! this.props.attributes.src,
 				src: this.props.attributes.src,
-				className,
+				className
 			};
 		}
 
