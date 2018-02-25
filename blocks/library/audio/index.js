@@ -6,7 +6,7 @@
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { Button, IconButton, Placeholder, Toolbar } from '@wordpress/components';
+import { Button, IconButton, Placeholder, Toolbar, MediaElement } from '@wordpress/components';
 import { Component } from '@wordpress/element';
 
 /**
@@ -14,13 +14,13 @@ import { Component } from '@wordpress/element';
  */
 import './style.scss';
 import './editor.scss';
-import { registerBlockType } from '../../api';
-import MediaUploadButton from '../../media-upload-button';
-import Editable from '../../editable';
+import MediaUpload from '../../media-upload';
+import RichText from '../../rich-text';
 import BlockControls from '../../block-controls';
-import BlockAlignmentToolbar from '../../block-alignment-toolbar';
 
-registerBlockType( 'core/audio', {
+export const name = 'core/audio';
+
+export const settings = {
 	title: __( 'Audio' ),
 
 	description: __( 'The Audio block allows you to embed audio files and play them back using a simple player.' ),
@@ -36,9 +36,6 @@ registerBlockType( 'core/audio', {
 			selector: 'audio',
 			attribute: 'src',
 		},
-		align: {
-			type: 'string',
-		},
 		caption: {
 			type: 'array',
 			source: 'children',
@@ -47,13 +44,13 @@ registerBlockType( 'core/audio', {
 		id: {
 			type: 'number',
 		},
+		mediaItem: {
+			type: 'array',
+		},
 	},
 
-	getEditWrapperProps( attributes ) {
-		const { align } = attributes;
-		if ( 'left' === align || 'right' === align || 'wide' === align || 'full' === align ) {
-			return { 'data-align': align };
-		}
+	supports: {
+		align: true,
 	},
 
 	edit: class extends Component {
@@ -68,19 +65,19 @@ registerBlockType( 'core/audio', {
 			};
 		}
 		render() {
-			const { align, caption, id } = this.props.attributes;
-			const { setAttributes, focus, setFocus } = this.props;
+			const { align, caption, id, album, artist, image, title, mediaItem } = this.props.attributes;
+			const { setAttributes, isSelected } = this.props;
 			const { editing, className, src } = this.state;
-			const updateAlignment = ( nextAlign ) => setAttributes( { align: nextAlign } );
 			const switchToEditing = () => {
 				this.setState( { editing: true } );
 			};
 			const onSelectAudio = ( media ) => {
 				if ( media && media.url ) {
-					// sets the block's attribure and updates the edit component from the
+					// sets the block's attribute and updates the edit component from the
 					// selected media, then switches off the editing UI
-					setAttributes( { src: media.url, id: media.id } );
-					this.setState( { src: media.url, editing: false } );
+					setAttributes( { mediaItem: media } );
+					console.log( this.props.attributes );
+					this.setState( { editing: false } );
 				}
 			};
 			const onSelectUrl = ( event ) => {
@@ -92,12 +89,8 @@ registerBlockType( 'core/audio', {
 				}
 				return false;
 			};
-			const controls = focus && (
+			const controls = isSelected && (
 				<BlockControls key="controls">
-					<BlockAlignmentToolbar
-						value={ align }
-						onChange={ updateAlignment }
-					/>
 					<Toolbar>
 						<IconButton
 							className="components-icon-button components-toolbar__control"
@@ -109,8 +102,6 @@ registerBlockType( 'core/audio', {
 				</BlockControls>
 			);
 
-			const focusCaption = ( focusValue ) => setFocus( { editable: 'caption', ...focusValue } );
-
 			if ( editing ) {
 				return [
 					controls,
@@ -118,7 +109,7 @@ registerBlockType( 'core/audio', {
 						key="placeholder"
 						icon="media-audio"
 						label={ __( 'Audio' ) }
-						instructions={ __( 'Select an audio file from your library, or upload a new one:' ) }
+						instructions={ __( 'Select an audio file from your library, or upload a new one' ) }
 						className={ className }>
 						<form onSubmit={ onSelectUrl }>
 							<input
@@ -133,14 +124,16 @@ registerBlockType( 'core/audio', {
 								{ __( 'Use URL' ) }
 							</Button>
 						</form>
-						<MediaUploadButton
-							buttonProps={ { isLarge: true } }
+						<MediaUpload
 							onSelect={ onSelectAudio }
 							type="audio"
 							value={ id }
-						>
-							{ __( 'Add from Media Library' ) }
-						</MediaUploadButton>
+							render={ ( { open } ) => (
+								<Button isLarge onClick={ open }>
+									{ __( 'Add from Media Library' ) }
+								</Button>
+							) }
+						/>
 					</Placeholder>,
 				];
 			}
@@ -149,18 +142,19 @@ registerBlockType( 'core/audio', {
 			return [
 				controls,
 				<figure key="audio" className={ className }>
-					<audio controls="controls" src={ src } />
-					{ ( ( caption && caption.length ) || !! focus ) && (
-						<Editable
-							tagName="figcaption"
-							placeholder={ __( 'Write caption…' ) }
-							value={ caption }
-							focus={ focus && focus.editable === 'caption' ? focus : undefined }
-							onFocus={ focusCaption }
-							onChange={ ( value ) => setAttributes( { caption: value } ) }
-							inlineToolbar
-						/>
-					) }
+					<MediaElement
+						id="player1"
+						mediaType="audio"
+						preload="auto"
+						controls
+						width="640"
+						height="360"
+						poster=""
+						sources={ JSON.stringify( mediaItem ) }
+						options={ JSON.stringify( mediaItem ) }
+						tracks={ JSON.stringify( mediaItem ) }
+						src={ mediaItem.url }
+					/>
 				</figure>,
 			];
 			/* eslint-enable jsx-a11y/no-static-element-interactions, jsx-a11y/onclick-has-role, jsx-a11y/click-events-have-key-events */
@@ -168,12 +162,24 @@ registerBlockType( 'core/audio', {
 	},
 
 	save( { attributes } ) {
-		const { align, src, caption } = attributes;
+		const { align, src, album, artist, image, title, caption, mediaItem } = attributes;
+
 		return (
-			<figure className={ align ? `align${ align }` : null }>
-				<audio controls="controls" src={ src } />
-				{ caption && caption.length > 0 && <figcaption>{ caption }</figcaption> }
+			<figure>
+				<MediaElement
+					id="player1"
+					mediaType="audio"
+					preload="auto"
+					controls
+					width="640"
+					height="360"
+					poster=""
+					sources={ JSON.stringify( mediaItem ) }
+					options={ JSON.stringify( mediaItem ) }
+					tracks={ JSON.stringify( mediaItem ) }
+					src={ mediaItem.url }
+				/>
 			</figure>
 		);
 	},
-} );
+};

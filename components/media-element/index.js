@@ -1,28 +1,14 @@
 /**
  * External Dependencies
  */
-//import 'mediaelement';
-//import { mediaElement } from '@wordpress/components';
 import { Component } from '@wordpress/element';
-
-
-// Import stylesheet and shims
-//import 'mediaelement/build/mediaelementplayer.min.css';
-//may not need to import the swf file
-//import 'mediaelement/build/mediaelement-flash-video.swf';
 
 export default class MediaElement extends Component {
 
-	//state = {}
-
 	constructor() {
 		super();
-		// edit component has its own src in the state so it can be edited
-		// without setting the actual value outside of the edit UI
 		this.state = {};
 	}
-
-
 
 	success(media, node, instance) {
 		// Your action when media was successfully loaded
@@ -43,23 +29,11 @@ export default class MediaElement extends Component {
 			trackListing = []
 		;
 
-		for (let i = 0, total = sources.length; i < total; i++) {
-			const source = sources[i];
-			sourceTags.push(`<source src="${source.src}" type="${source.type}">`);
-		}
+			sourceTags.push(`<source src="${sources.url}" type="${sources.type}">`);
 
-		for (let i = 0, total = sources.length; i < total; i++) {
-			const source = sources[i];
-			trackListing.push(`<li>${source.title}</li>`);
-		}
-
-		for (let i = 0, total = tracks.length; i < total; i++) {
-			const track = tracks[i];
-			tracksTags.push(`<track src="${track.src}" kind="${track.kind}" srclang="${track.lang}"${(track.label ? ` label=${track.label}` : '')}>`);
-		}
+			tracksTags.push(`<track src="${tracks.url}" kind="${tracks.kind}" srclang="${tracks.lang}"${(tracks.label ? ` label=${track.label}` : '')}>`);
 
 		const
-			mediaPlaylist = `${trackListing.join("\n")}`,
 			mediaBody = `${sourceTags.join("\n")}
 				${tracksTags.join("\n")}`,
 			mediaHtml = props.mediaType === 'video' ?
@@ -69,8 +43,7 @@ export default class MediaElement extends Component {
 				</video>` :
 				`<audio id="${props.id}" width="${props.width}" src="${props.src}" controls>
 					${mediaBody}
-				</audio>
-				${mediaPlaylist}`
+				</audio>`
 		;
 
 		return (<div dangerouslySetInnerHTML={{__html: mediaHtml}}></div>);
