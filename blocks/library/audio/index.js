@@ -46,7 +46,7 @@ export const settings = {
 		},
 		mediaItem: {
 			type: 'array',
-		}
+		},
 	},
 
 	supports: {
@@ -76,7 +76,7 @@ export const settings = {
 					// sets the block's attribute and updates the edit component from the
 					// selected media, then switches off the editing UI
 					setAttributes( { mediaItem: media } );
-					console.log(this.props.attributes);
+					console.log( this.props.attributes );
 					this.setState( { editing: false } );
 				}
 			};
@@ -142,19 +142,19 @@ export const settings = {
 			return [
 				controls,
 				<figure key="audio" className={ className }>
-				<MediaElement
-				 id="player1"
-				 mediaType="audio"
-				 preload="auto"
-				 controls
-				 width="640"
-				 height="360"
-				 poster=""
-				 sources={JSON.stringify(mediaItem)}
-				 options={JSON.stringify(mediaItem)}
-				 tracks={JSON.stringify(mediaItem)}
-				 src= { mediaItem.url }
-				/>
+					<MediaElement
+						id="player1"
+						mediaType="audio"
+						preload="auto"
+						controls
+						width="640"
+						height="360"
+						poster=""
+						sources={ JSON.stringify( mediaItem ) }
+						options={ JSON.stringify( mediaItem ) }
+						tracks={ JSON.stringify( mediaItem ) }
+						src={ mediaItem.url }
+					/>
 				</figure>,
 			];
 			/* eslint-enable jsx-a11y/no-static-element-interactions, jsx-a11y/onclick-has-role, jsx-a11y/click-events-have-key-events */
@@ -166,19 +166,19 @@ export const settings = {
 
 		return (
 			<figure>
-			<MediaElement
-			 id="player1"
-			 mediaType="audio"
-			 preload="auto"
-			 controls
-			 width="640"
-			 height="360"
-			 poster=""
-			 sources={JSON.stringify(mediaItem)}
-			 options={JSON.stringify(mediaItem)}
-			 tracks={JSON.stringify(mediaItem)}
-			 src= { mediaItem.url }
-			/>
+				<MediaElement
+					id="player1"
+					mediaType="audio"
+					preload="auto"
+					controls
+					width="640"
+					height="360"
+					poster=""
+					sources={ JSON.stringify( mediaItem ) }
+					options={ JSON.stringify( mediaItem ) }
+					tracks={ JSON.stringify( mediaItem ) }
+					src={ mediaItem.url }
+				/>
 			</figure>
 		);
 	},
