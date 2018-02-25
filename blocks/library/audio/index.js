@@ -82,6 +82,7 @@ export const settings = {
 					this.setState( { src: media.url, editing: false } );
 				}
 			};
+			
 			const onSelectUrl = ( event ) => {
 				event.preventDefault();
 				if ( src ) {
