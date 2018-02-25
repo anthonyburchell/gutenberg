@@ -44,6 +44,9 @@ export const settings = {
 		id: {
 			type: 'number',
 		},
+		mediaItem: {
+			type: 'array',
+		}
 	},
 
 	supports: {
@@ -62,27 +65,21 @@ export const settings = {
 			};
 		}
 		render() {
-			const { caption, id, album, artist, image, title, mediaItem } = this.props.attributes;
+			const { align, caption, id, album, artist, image, title, mediaItem } = this.props.attributes;
 			const { setAttributes, isSelected } = this.props;
 			const { editing, className, src } = this.state;
 			const switchToEditing = () => {
 				this.setState( { editing: true } );
 			};
 			const onSelectAudio = ( media ) => {
-				for (var mediaObject of media) {
-					mediaObject.src = mediaObject.url;
-					mediaObject.playlistType = mediaObject.type;
-				}
 				if ( media && media.url ) {
 					// sets the block's attribute and updates the edit component from the
 					// selected media, then switches off the editing UI
-					setAttributes( {
-						mediaItem: media,
-					} );
-					this.setState( { src: media.url, editing: false } );
+					setAttributes( { mediaItem: media } );
+					console.log(this.props.attributes);
+					this.setState( { editing: false } );
 				}
 			};
-			
 			const onSelectUrl = ( event ) => {
 				event.preventDefault();
 				if ( src ) {
@@ -145,17 +142,19 @@ export const settings = {
 			return [
 				controls,
 				<figure key="audio" className={ className }>
-					<audio controls="controls" src={ src } />
-					{ ( ( caption && caption.length ) || !! isSelected ) && (
-						<RichText
-							tagName="figcaption"
-							placeholder={ __( 'Write caption…' ) }
-							value={ caption }
-							onChange={ ( value ) => setAttributes( { caption: value } ) }
-							isSelected={ isSelected }
-							inlineToolbar
-						/>
-					) }
+				<MediaElement
+				 id="player1"
+				 mediaType="audio"
+				 preload="auto"
+				 controls
+				 width="640"
+				 height="360"
+				 poster=""
+				 sources={JSON.stringify(mediaItem)}
+				 options={JSON.stringify(mediaItem)}
+				 tracks={JSON.stringify(mediaItem)}
+				 src= { mediaItem.url }
+				/>
 				</figure>,
 			];
 			/* eslint-enable jsx-a11y/no-static-element-interactions, jsx-a11y/onclick-has-role, jsx-a11y/click-events-have-key-events */
@@ -163,11 +162,23 @@ export const settings = {
 	},
 
 	save( { attributes } ) {
-		const { src, caption } = attributes;
+		const { align, src, album, artist, image, title, caption, mediaItem } = attributes;
+
 		return (
 			<figure>
-				<audio controls="controls" src={ src } />
-				{ caption && caption.length > 0 && <figcaption>{ caption }</figcaption> }
+			<MediaElement
+			 id="player1"
+			 mediaType="audio"
+			 preload="auto"
+			 controls
+			 width="640"
+			 height="360"
+			 poster=""
+			 sources={JSON.stringify(mediaItem)}
+			 options={JSON.stringify(mediaItem)}
+			 tracks={JSON.stringify(mediaItem)}
+			 src= { mediaItem.url }
+			/>
 			</figure>
 		);
 	},
