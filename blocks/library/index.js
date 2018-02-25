@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  * Internal dependencies
  */
@@ -91,3 +92,31 @@ export const registerCoreBlocks = () => {
 	setDefaultBlockName( paragraph.name );
 	setUnknownTypeHandlerName( freeform.name );
 };
+=======
+import './shortcode';
+import './image';
+import './gallery';
+import './heading';
+import './quote';
+import './embed';
+import './list';
+import './separator';
+import './more';
+import './button';
+import './pullquote';
+import './table';
+import './preformatted';
+import './code';
+import './html';
+import './freeform';
+import './latest-posts';
+import './categories';
+import './cover-image';
+import './text-columns';
+import './verse';
+import './video';
+import './audio';
+import './playlist';
+import './block';
+import './paragraph';
+>>>>>>> 8d0ec65a40dbc9a7795645ec72a7ce5ad8d6a1c8
