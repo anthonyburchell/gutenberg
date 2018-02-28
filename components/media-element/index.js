@@ -58,14 +58,14 @@ export default class MediaElement extends Component {
 			return;
 		}
 
-		const options = Object.assign({}, JSON.parse(this.props.options), {
-			// Read the Notes below for more explanation about how to set up the path for shims
-			pluginPath: './static/media/',
-			success: (media, node, instance) => this.success(media, node, instance),
-			error: (media, node) => this.error(media, node)
-		});
+		// const options = Object.assign({}, JSON.parse(this.props.options), {
+		// 	// Read the Notes below for more explanation about how to set up the path for shims
+		// 	pluginPath: './static/media/',
+		// 	success: (media, node, instance) => this.success(media, node, instance),
+		// 	error: (media, node) => this.error(media, node)
+		// });
 
-		this.setState({player: new MediaElementPlayer(this.props.id, options)});
+		this.setState({player: new MediaElementPlayer(this.props.id)});
 	}
 
 	componentWillUnmount() {

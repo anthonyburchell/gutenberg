@@ -44,6 +44,21 @@ export const settings = {
 		id: {
 			type: 'number',
 		},
+		album: {
+			type: 'string',
+		},
+		artist: {
+			type: 'string',
+		},
+		title: {
+			type: 'string',
+		},
+		options: {
+			type: 'array',
+		},
+		image: {
+			type: 'array',
+		},
 		mediaItem: {
 			type: 'array',
 		},
@@ -65,9 +80,9 @@ export const settings = {
 			};
 		}
 		render() {
-			const { align, caption, id, album, artist, image, title, mediaItem } = this.props.attributes;
+			const { align, caption, id, album, artist, image, title, mediaItem, options, src } = this.props.attributes;
 			const { setAttributes, isSelected } = this.props;
-			const { editing, className, src } = this.state;
+			const { editing, className } = this.state;
 			const switchToEditing = () => {
 				this.setState( { editing: true } );
 			};
@@ -75,7 +90,16 @@ export const settings = {
 				if ( media && media.url ) {
 					// sets the block's attribute and updates the edit component from the
 					// selected media, then switches off the editing UI
-					setAttributes( { mediaItem: media } );
+					setAttributes( {
+						mediaItem: media,
+						title: media.title,
+						caption: media.caption,
+						src: media.url,
+						id: media.id,
+					 	album: media.album,
+						artist: media.artist,
+						image: media.image
+					} );
 					console.log( this.props.attributes );
 					this.setState( { editing: false } );
 				}
@@ -143,7 +167,7 @@ export const settings = {
 				controls,
 				<figure key="audio" className={ className }>
 					<MediaElement
-						id="player1"
+						id={ className }
 						mediaType="audio"
 						preload="auto"
 						controls
@@ -151,9 +175,9 @@ export const settings = {
 						height="360"
 						poster=""
 						sources={ JSON.stringify( mediaItem ) }
-						options={ JSON.stringify( mediaItem ) }
+						options={ JSON.stringify( options ) }
 						tracks={ JSON.stringify( mediaItem ) }
-						src={ mediaItem.url }
+						src={ src }
 					/>
 				</figure>,
 			];
@@ -162,12 +186,12 @@ export const settings = {
 	},
 
 	save( { attributes } ) {
-		const { align, src, album, artist, image, title, caption, mediaItem } = attributes;
+		const { align, src, album, artist, image, title, caption, options, mediaItem, className } = attributes;
 
 		return (
-			<figure>
+			<figure key="audio" className={ className }>
 				<MediaElement
-					id="player1"
+					id={ className }
 					mediaType="audio"
 					preload="auto"
 					controls
@@ -175,9 +199,9 @@ export const settings = {
 					height="360"
 					poster=""
 					sources={ JSON.stringify( mediaItem ) }
-					options={ JSON.stringify( mediaItem ) }
+					options={ JSON.stringify( options ) }
 					tracks={ JSON.stringify( mediaItem ) }
-					src={ mediaItem.url }
+					src={ src }
 				/>
 			</figure>
 		);
