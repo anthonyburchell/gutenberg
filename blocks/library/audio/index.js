@@ -80,7 +80,7 @@ export const settings = {
 			};
 		}
 		render() {
-			const { align, caption, id, album, artist, image, title, mediaItem, config, src } = this.props.attributes;
+			const { align, caption, id, album, artist, image, title, mediaItem, src } = this.props.attributes;
 			const { setAttributes, isSelected } = this.props;
 			const { editing, className } = this.state;
 			const switchToEditing = () => {
@@ -187,7 +187,7 @@ export const settings = {
 	},
 
 	save( { attributes } ) {
-		const { align, src, album, artist, id, image, title, caption, config, mediaItem, className } = attributes;
+		const { align, src, album, artist, id, image, title, caption, mediaItem, className } = attributes;
 
 		return (
 			<figure key="audio" className={ className }>
