@@ -11,11 +11,11 @@ export default class MediaElement extends Component {
 	}
 
 	success(media, node, instance) {
-		// Your action when media was successfully loaded
+		//  action when media was successfully loaded
 	}
 
 	error(media) {
-		// Your action when media had an error loading
+		//  action when media had an error loading
 	}
 
 	render() {
@@ -53,14 +53,14 @@ export default class MediaElement extends Component {
 			return;
 		}
 
-		if (typeof options !== 'undefined') {
+		if (typeof this.props.options !== 'undefined') {
 			const options = Object.assign({}, JSON.parse(this.props.options), {
-				// Read the Notes below for more explanation about how to set up the path for shims
-				pluginPath: './static/media/',
+				//pluginPath: './static/media/',
 				success: (media, node, instance) => this.success(media, node, instance),
 				error: (media, node) => this.error(media, node)
 			});
 			this.setState({player: new MediaElementPlayer( this.props.id, options )});
+			return;
 		}
 		this.setState({player: new MediaElementPlayer( this.props.id, this.props.options )});
 	}
