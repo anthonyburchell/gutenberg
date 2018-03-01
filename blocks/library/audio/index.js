@@ -34,12 +34,12 @@ export const settings = {
 			type: 'string',
 			source: 'attribute',
 			selector: 'audio',
-			attribute: 'src',
+			attribute: 'src'
 		},
 		caption: {
 			type: 'array',
 			source: 'children',
-			selector: 'figcaption',
+			selector: 'figcaption'
 		},
 		id: {
 			type: 'number',
