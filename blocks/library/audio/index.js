@@ -80,7 +80,7 @@ export const settings = {
 			};
 		}
 		render() {
-			const { align, caption, id, album, artist, image, title, mediaItem, options, src } = this.props.attributes;
+			const { align, caption, id, album, artist, image, title, mediaItem, config, src } = this.props.attributes;
 			const { setAttributes, isSelected } = this.props;
 			const { editing, className } = this.state;
 			const switchToEditing = () => {
@@ -100,6 +100,7 @@ export const settings = {
 						artist: media.artist,
 						image: media.image
 					} );
+					//logging atts for debuging purposes
 					console.log( this.props.attributes );
 					this.setState( { editing: false } );
 				}
@@ -167,7 +168,7 @@ export const settings = {
 				controls,
 				<figure key="audio" className={ className }>
 					<MediaElement
-						id={ className }
+						id={ id }
 						mediaType="audio"
 						preload="auto"
 						controls
@@ -175,23 +176,23 @@ export const settings = {
 						height="360"
 						poster=""
 						sources={ JSON.stringify( mediaItem ) }
-						options={ JSON.stringify( options ) }
+						options={ JSON.stringify( config ) }
 						tracks={ JSON.stringify( mediaItem ) }
 						src={ src }
 					/>
-				</figure>,
+				</figure>
 			];
 			/* eslint-enable jsx-a11y/no-static-element-interactions, jsx-a11y/onclick-has-role, jsx-a11y/click-events-have-key-events */
 		}
 	},
 
 	save( { attributes } ) {
-		const { align, src, album, artist, image, title, caption, options, mediaItem, className } = attributes;
+		const { align, src, album, artist, id, image, title, caption, config, mediaItem, className } = attributes;
 
 		return (
 			<figure key="audio" className={ className }>
 				<MediaElement
-					id={ className }
+					id={ id }
 					mediaType="audio"
 					preload="auto"
 					controls
@@ -199,7 +200,7 @@ export const settings = {
 					height="360"
 					poster=""
 					sources={ JSON.stringify( mediaItem ) }
-					options={ JSON.stringify( options ) }
+					options={ JSON.stringify( config ) }
 					tracks={ JSON.stringify( mediaItem ) }
 					src={ src }
 				/>
