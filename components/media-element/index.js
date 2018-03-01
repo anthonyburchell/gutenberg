@@ -62,7 +62,7 @@ export default class MediaElement extends Component {
 			});
 			this.setState({player: new MediaElementPlayer( this.props.id, options )});
 		}
-		this.setState({player: new MediaElementPlayer( this.props.id )});
+		this.setState({player: new MediaElementPlayer( this.props.id, this.props.options )});
 	}
 
 	componentWillUnmount() {

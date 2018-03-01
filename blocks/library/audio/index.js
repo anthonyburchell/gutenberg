@@ -168,7 +168,7 @@ export const settings = {
 				controls,
 				<figure key="audio" className={ className }>
 					<MediaElement
-						id={ id }
+						id="player1"
 						mediaType="audio"
 						preload="auto"
 						controls
@@ -176,7 +176,7 @@ export const settings = {
 						height="360"
 						poster=""
 						sources={ JSON.stringify( mediaItem ) }
-						options={ JSON.stringify( config ) }
+						options={ JSON.stringify( mediaItem ) }
 						tracks={ JSON.stringify( mediaItem ) }
 						src={ src }
 					/>
@@ -192,7 +192,7 @@ export const settings = {
 		return (
 			<figure key="audio" className={ className }>
 				<MediaElement
-					id={ id }
+					id="player1"
 					mediaType="audio"
 					preload="auto"
 					controls
@@ -200,7 +200,7 @@ export const settings = {
 					height="360"
 					poster=""
 					sources={ JSON.stringify( mediaItem ) }
-					options={ JSON.stringify( config ) }
+					options={ JSON.stringify( mediaItem ) }
 					tracks={ JSON.stringify( mediaItem ) }
 					src={ src }
 				/>
