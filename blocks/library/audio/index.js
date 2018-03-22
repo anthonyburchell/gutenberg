@@ -15,7 +15,6 @@ import { Component } from '@wordpress/element';
 import './style.scss';
 import './editor.scss';
 import MediaUpload from '../../media-upload';
-import RichText from '../../rich-text';
 import BlockControls from '../../block-controls';
 
 export const name = 'core/audio';
@@ -23,7 +22,7 @@ export const name = 'core/audio';
 export const settings = {
 	title: __( 'Audio' ),
 
-	description: __( 'The Audio block allows you to embed audio files and play them back using a simple player.' ),
+	description: __( 'The Audio block allows you to embed audio files and play them back using the mediaelement player component.' ),
 
 	icon: 'format-audio',
 
@@ -34,12 +33,12 @@ export const settings = {
 			type: 'string',
 			source: 'attribute',
 			selector: 'audio',
-			attribute: 'src'
+			attribute: 'src',
 		},
 		caption: {
 			type: 'array',
 			source: 'children',
-			selector: 'figcaption'
+			selector: 'figcaption',
 		},
 		id: {
 			type: 'number',
@@ -80,7 +79,7 @@ export const settings = {
 			};
 		}
 		render() {
-			const { align, caption, id, album, artist, image, title, mediaItem, src } = this.props.attributes;
+			const { id, mediaItem, src } = this.props.attributes;
 			const { setAttributes, isSelected } = this.props;
 			const { editing, className } = this.state;
 			const switchToEditing = () => {
@@ -92,16 +91,11 @@ export const settings = {
 					// selected media, then switches off the editing UI
 					setAttributes( {
 						mediaItem: media,
-						title: media.title,
-						caption: media.caption,
 						src: media.url,
 						id: media.id,
-					 	album: media.album,
-						artist: media.artist,
-						image: media.image
 					} );
 					//logging atts for debuging purposes
-					console.log( this.props.attributes );
+					// console.log( this.props.attributes );
 					this.setState( { editing: false } );
 				}
 			};
@@ -180,16 +174,16 @@ export const settings = {
 						tracks={ JSON.stringify( mediaItem ) }
 						src={ src }
 					/>
-				</figure>
+				</figure>,
 			];
 			/* eslint-enable jsx-a11y/no-static-element-interactions, jsx-a11y/onclick-has-role, jsx-a11y/click-events-have-key-events */
 		}
 	},
 
 	save( { attributes } ) {
-		const { align, src, album, artist, id, image, title, caption, mediaItem, className } = attributes;
+		const { src, mediaItem, className } = attributes;
 
-		return (
+		return [
 			<figure key="audio" className={ className }>
 				<MediaElement
 					id="player1"
@@ -204,7 +198,7 @@ export const settings = {
 					tracks={ JSON.stringify( mediaItem ) }
 					src={ src }
 				/>
-			</figure>
-		);
+			</figure>,
+		];
 	},
 };
