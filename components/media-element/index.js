@@ -8,13 +8,13 @@ export default class MediaElement extends Component {
 		this.state = {};
 	}
 
-	// success( media, node, instance ) {
-	// 	//  action when media was successfully loaded
-	// }
-	//
-	// error( media ) {
-	// 	//  action when media had an error loading
-	// }
+	success( media, node, instance ) {
+		//  action when media was successfully loaded
+	}
+
+	error( media ) {
+		//  action when media had an error loading
+	}
 
 	render() {
 		const

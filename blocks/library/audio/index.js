@@ -183,7 +183,7 @@ export const settings = {
 	save( { attributes } ) {
 		const { src, mediaItem, className } = attributes;
 
-		return [
+		return (
 			<figure key="audio" className={ className }>
 				<MediaElement
 					id="player1"
@@ -198,7 +198,7 @@ export const settings = {
 					tracks={ JSON.stringify( mediaItem ) }
 					src={ src }
 				/>
-			</figure>,
-		];
+			</figure>
+		);
 	},
 };
