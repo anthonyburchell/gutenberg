@@ -60,6 +60,8 @@ export const settings = {
 		},
 		mediaItem: {
 			type: 'array',
+			source: 'children',
+			attribute: 'mediaItem',
 		},
 	},
 
@@ -99,6 +101,7 @@ export const settings = {
 					this.setState( { editing: false } );
 				}
 			};
+
 			const onSelectUrl = ( event ) => {
 				event.preventDefault();
 				if ( src ) {
@@ -160,7 +163,7 @@ export const settings = {
 			/* eslint-disable jsx-a11y/no-static-element-interactions, jsx-a11y/onclick-has-role, jsx-a11y/click-events-have-key-events */
 			return [
 				controls,
-				<figure key="audio" className={ className }>
+				<figure key="audio" className={ [ className, 'mejs-container wp-audio-shortcode mejs-audio' ].join( ' ' ) }>
 					<MediaElement
 						id="player1"
 						mediaType="audio"
@@ -184,7 +187,7 @@ export const settings = {
 		const { src, mediaItem, className } = attributes;
 
 		return (
-			<figure key="audio" className={ className }>
+			<figure key="audio" className={ [ className, 'mejs-container wp-audio-shortcode mejs-audio' ].join( ' ' ) }>
 				<MediaElement
 					id="player1"
 					mediaType="audio"
