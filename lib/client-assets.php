@@ -231,7 +231,7 @@ function gutenberg_register_scripts_and_styles() {
 	wp_register_script(
 		'wp-editor',
 		gutenberg_url( 'editor/build/index.js' ),
-		array( 'postbox', 'jquery', 'wp-api', 'wp-data', 'wp-date', 'wp-i18n', 'wp-blocks', 'wp-element', 'wp-components', 'wp-utils', 'word-count', 'editor' ),
+		array( 'postbox', 'jquery', 'wp-api', 'wp-data', 'wp-date', 'wp-i18n', 'wp-blocks', 'wp-element', 'mediaelement', 'wp-components', 'wp-utils', 'word-count', 'editor' ),
 		filemtime( gutenberg_dir_path() . 'editor/build/index.js' )
 	);
 

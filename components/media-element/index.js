@@ -22,9 +22,7 @@ export default class MediaElement extends Component {
 			sources = JSON.parse( props.sources ),
 			tracks = JSON.parse( props.tracks ),
 			sourceTags = [],
-			tracksTags = []
-		;
-		const
+			tracksTags = [],
 			mediaBody = `${ sourceTags.join( '\n' ) }
 				${ tracksTags.join( '\n' ) }`,
 			mediaHtml = props.mediaType === 'video' ?
@@ -32,7 +30,7 @@ export default class MediaElement extends Component {
 					${ ( props.controls ? ' controls' : '' ) }${ ( props.preload ? ` preload="${ props.preload }"` : '' ) }>
 					${ mediaBody }
 				</video>` :
-				`<audio id="${ props.id }" width="${ props.width }" src="${ props.src }" controls>
+				`<audio id="${ props.id }" width="${ props.width }" src="${ sources.url }" controls>
 					${ mediaBody }
 				</audio>`
 		;
@@ -50,8 +48,8 @@ export default class MediaElement extends Component {
 		if ( typeof this.props.options !== 'undefined' ) {
 			const options = Object.assign( {}, JSON.parse( this.props.options ), {
 				//pluginPath: './static/media/',
-				success: ( media, node, instance ) => this.success( media, node, instance ),
-				error: ( media, node ) => this.error( media, node ),
+				//success: ( media, node, instance ) => this.success( media, node, instance ),
+				//error: ( media, node ) => this.error( media, node ),
 			} );
 			this.setState( { player: new MediaElementPlayer( this.props.id, options ) } );
 			return;

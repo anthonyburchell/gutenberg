@@ -40,28 +40,33 @@ export const settings = {
 			source: 'children',
 			selector: 'figcaption',
 		},
-		id: {
-			type: 'number',
-		},
-		album: {
-			type: 'string',
-		},
-		artist: {
-			type: 'string',
-		},
-		title: {
-			type: 'string',
-		},
-		options: {
-			type: 'array',
-		},
-		image: {
-			type: 'array',
-		},
+		// id: {
+		// 	type: 'number',
+		// },
+		// album: {
+		// 	type: 'string',
+		// },
+		// artist: {
+		// 	type: 'string',
+		// },
+		// title: {
+		// 	type: 'string',
+		// },
+		// options: {
+		// 	type: 'array',
+		// },
+		// image: {
+		// 	type: 'array',
+		// },
 		mediaItem: {
 			type: 'array',
 			source: 'children',
 			attribute: 'mediaItem',
+		},
+		playerOptions: {
+			type: 'array',
+			source: 'children',
+			attribute: 'playerOptions',
 		},
 	},
 
@@ -81,7 +86,8 @@ export const settings = {
 			};
 		}
 		render() {
-			const { id, mediaItem, src } = this.props.attributes;
+			const config = {};
+			const { id, mediaItem, src, playerOptions } = this.props.attributes;
 			const { setAttributes, isSelected } = this.props;
 			const { editing, className } = this.state;
 			const switchToEditing = () => {
@@ -93,6 +99,7 @@ export const settings = {
 					// selected media, then switches off the editing UI
 					setAttributes( {
 						mediaItem: media,
+						playerOptions: config,
 						src: media.url,
 						id: media.id,
 					} );
@@ -173,9 +180,8 @@ export const settings = {
 						height="360"
 						poster=""
 						sources={ JSON.stringify( mediaItem ) }
-						options={ JSON.stringify( mediaItem ) }
+						options={ JSON.stringify( playerOptions ) }
 						tracks={ JSON.stringify( mediaItem ) }
-						src={ src }
 					/>
 				</figure>,
 			];
@@ -184,7 +190,7 @@ export const settings = {
 	},
 
 	save( { attributes } ) {
-		const { src, mediaItem, className } = attributes;
+		const { src, mediaItem, className, playerOptions } = attributes;
 
 		return (
 			<figure key="audio" className={ [ className, 'mejs-container wp-audio-shortcode mejs-audio' ].join( ' ' ) }>
@@ -197,9 +203,8 @@ export const settings = {
 					height="360"
 					poster=""
 					sources={ JSON.stringify( mediaItem ) }
-					options={ JSON.stringify( mediaItem ) }
+					options={ JSON.stringify( playerOptions ) }
 					tracks={ JSON.stringify( mediaItem ) }
-					src={ src }
 				/>
 			</figure>
 		);
