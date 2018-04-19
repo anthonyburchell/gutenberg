@@ -57,7 +57,6 @@ class GalleryBlock extends Component {
 
 		this.state = {
 			selectedImage: null,
-			editing: null,
 		};
 	}
 
@@ -66,7 +65,6 @@ class GalleryBlock extends Component {
 			if ( this.state.selectedImage !== index ) {
 				this.setState( {
 					selectedImage: index,
-					editing: false,
 				} );
 			}
 		};
@@ -149,14 +147,12 @@ class GalleryBlock extends Component {
 			this.setState( {
 				selectedImage: null,
 				captionSelected: false,
-				editing: null,
 			} );
 		}
 	}
 
 	render() {
 		const { attributes, isSelected, className } = this.props;
-		const { editing } = this.state;
 		const { images, columns = defaultColumnsNumber( attributes ), align, imageCrop, linkTo } = attributes;
 		const dropZone = (
 			<DropZone
