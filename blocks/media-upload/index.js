@@ -82,7 +82,7 @@ class MediaUpload extends Component {
 			const GalleryDetailsMediaFrame = getGalleryDetailsMediaFrame();
 			if ( editing ) {
 				this.frame = new GalleryDetailsMediaFrame( {
-					frame: 'select',
+					frame: 'manage',
 					mimeType: type,
 					state: 'gallery-edit',
 				} );
@@ -145,7 +145,7 @@ class MediaUpload extends Component {
 		if ( ! this.props.value ) {
 			return;
 		}
-		if ( this.props.editing ) {
+		if ( this.props.multiple ) {
 			this.props.value.map( addMedia );
 		} else {
 			addMedia( this.props.value );
