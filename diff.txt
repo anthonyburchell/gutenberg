@@ -1,0 +1,97 @@
+diff --git a/blocks/library/gallery/block.js b/blocks/library/gallery/block.js
+index cf8353b..1685596 100644
+--- a/blocks/library/gallery/block.js
++++ b/blocks/library/gallery/block.js
+@@ -175,6 +175,7 @@ class GalleryBlock extends Component {
+ 								type="image"
+ 								multiple
+ 								gallery
++								editing
+ 								value={ images.map( ( img ) => img.id ) }
+ 								render={ ( { open } ) => (
+ 									<IconButton
+diff --git a/blocks/media-upload/index.js b/blocks/media-upload/index.js
+index 3b8031e..feb9f5c 100644
+--- a/blocks/media-upload/index.js
++++ b/blocks/media-upload/index.js
+@@ -38,10 +38,10 @@ const getGalleryDetailsMediaFrame = () => {
+ 				} ),
+ 
+ 				new wp.media.controller.GalleryEdit( {
++					id: 'editGallery',
+ 					library: this.options.selection,
+ 					editing: this.options.editing,
+ 					menu: 'gallery',
+-					displaySettings: false,
+ 				} ),
+ 
+ 				new wp.media.controller.GalleryAdd(),
+@@ -58,7 +58,7 @@ const slimImageObject = ( img ) => {
+ };
+ 
+ class MediaUpload extends Component {
+-	constructor( { multiple = false, type, gallery = false, title = __( 'Select or Upload Media' ), modalClass } ) {
++	constructor( { multiple = false, type, gallery = false, editing = false, title = __( 'Select or Upload Media' ), modalClass } ) {
+ 		super( ...arguments );
+ 		this.openModal = this.openModal.bind( this );
+ 		this.onSelect = this.onSelect.bind( this );
+@@ -76,7 +76,7 @@ class MediaUpload extends Component {
+ 			frameConfig.library = { type };
+ 		}
+ 
+-		if ( gallery ) {
++		if ( ! editing && gallery ) {
+ 			const GalleryDetailsMediaFrame = getGalleryDetailsMediaFrame();
+ 			this.frame = new GalleryDetailsMediaFrame( {
+ 				frame: 'select',
+@@ -88,6 +88,19 @@ class MediaUpload extends Component {
+ 			this.frame = wp.media( frameConfig );
+ 		}
+ 
++		if ( gallery && editing) {
++			const GalleryDetailsMediaFrame = getGalleryDetailsMediaFrame();
++			this.frame = new GalleryDetailsMediaFrame( {
++				frame: 'select',
++				mimeType: type,
++				state: 'editGallery',
++			} );
++			wp.media.frame = this.frame;
++		} else {
++			this.frame = wp.media( frameConfig );
++		}
++
++
+ 		if ( modalClass ) {
+ 			this.frame.$el.addClass( modalClass );
+ 		}
+@@ -131,12 +144,24 @@ class MediaUpload extends Component {
+ 			attachment.fetch();
+ 			selection.add( attachment );
+ 		};
++		const editMedia = ( id ) => {
++			const attachment = wp.media.attachment( id );
++			attachment.fetch();
++			selection.add( attachment );
++		}
+ 
+ 		if ( ! this.props.value ) {
+ 			return;
+ 		}
++		if ( this.props.editing && this.props.multiple ) {
++			console.log('I was triggered during editing');
++			this.props.value.map( editMedia );
++		} else {
++			editMedia( this.props.value );
++		}
+ 
+-		if ( this.props.multiple ) {
++		if ( this.props.multiple && ! this.props.editing ) {
++			console.log('I was triggered during editing...I shouldnt have and I feel bad');
+ 			this.props.value.map( addMedia );
+ 		} else {
+ 			addMedia( this.props.value );
+@@ -153,4 +178,3 @@ class MediaUpload extends Component {
+ }
+ 
+ export default MediaUpload;
+-

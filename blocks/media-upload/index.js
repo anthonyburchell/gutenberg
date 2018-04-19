@@ -30,7 +30,7 @@ const getGalleryDetailsMediaFrame = () => {
 					toolbar: 'main-gallery',
 					filterable: 'uploaded',
 					multiple: 'add',
-					editable: false,
+					editable: true,
 
 					library: wp.media.query( _.defaults( {
 						type: 'image',
@@ -38,14 +38,20 @@ const getGalleryDetailsMediaFrame = () => {
 				} ),
 
 				new wp.media.controller.GalleryEdit( {
-					library: this.options.selection,
+					// library: this.options.selection,
 					editing: this.options.editing,
 					menu: 'gallery',
 					displaySettings: false,
+					library: wp.media.query( _.defaults( {
+						type: 'image',
+					}, this.options.library ) ),
+
 				} ),
 
 				new wp.media.controller.GalleryAdd(),
+
 			] );
+
 		},
 	} );
 };
@@ -58,12 +64,13 @@ const slimImageObject = ( img ) => {
 };
 
 class MediaUpload extends Component {
-	constructor( { multiple = false, type, gallery = false, title = __( 'Select or Upload Media' ), modalClass } ) {
+	constructor( { multiple = false, type, gallery = false, editing = false, title = __( 'Select or Upload Media' ), modalClass } ) {
 		super( ...arguments );
 		this.openModal = this.openModal.bind( this );
 		this.onSelect = this.onSelect.bind( this );
 		this.onUpdate = this.onUpdate.bind( this );
 		this.onOpen = this.onOpen.bind( this );
+		this.onEdit = this.onEdit.bind( this );
 		const frameConfig = {
 			title,
 			button: {
@@ -78,11 +85,19 @@ class MediaUpload extends Component {
 
 		if ( gallery ) {
 			const GalleryDetailsMediaFrame = getGalleryDetailsMediaFrame();
-			this.frame = new GalleryDetailsMediaFrame( {
-				frame: 'select',
-				mimeType: type,
-				state: 'gallery',
-			} );
+			if ( editing ) {
+				this.frame = new GalleryDetailsMediaFrame( {
+					frame: 'select',
+					mimeType: type,
+					state: 'gallery-edit',
+				} );
+			} else {
+				this.frame = new GalleryDetailsMediaFrame( {
+					frame: 'select',
+					mimeType: type,
+					state: 'gallery',
+				} );
+			}
 			wp.media.frame = this.frame;
 		} else {
 			this.frame = wp.media( frameConfig );
@@ -96,6 +111,7 @@ class MediaUpload extends Component {
 		this.frame.on( 'select', this.onSelect );
 		this.frame.on( 'update', this.onUpdate );
 		this.frame.on( 'open', this.onOpen );
+		this.frame.on( 'edit', this.onEdit );
 	}
 
 	componentWillUnmount() {
@@ -131,17 +147,61 @@ class MediaUpload extends Component {
 			attachment.fetch();
 			selection.add( attachment );
 		};
+		const editMedia = ( id ) => {
+			const attachment = wp.media.attachment( id );
+			attachment.fetch();
+			selection.add( attachment );
+		}
 
 		if ( ! this.props.value ) {
 			return;
 		}
+		if ( this.props.editing && this.props.multiple ) {
+			console.log('I was triggered during editing');
+			this.props.value.map( editMedia );
+		} else {
+			editMedia( this.props.value );
+		}
 
-		if ( this.props.multiple ) {
+		if ( this.props.multiple && ! this.props.editing ) {
+			console.log('I was triggered during editing...I shouldnt have and I feel bad');
 			this.props.value.map( addMedia );
 		} else {
 			addMedia( this.props.value );
 		}
 	}
+
+	onEdit() {
+		const selection = this.frame.state().get( 'selection' );
+		const addMedia = ( id ) => {
+			const attachment = wp.media.attachment( id );
+			attachment.fetch();
+			selection.add( attachment );
+		};
+		const editMedia = ( id ) => {
+			const attachment = wp.media.attachment( id );
+			attachment.fetch();
+			selection.add( attachment );
+		}
+
+		if ( ! this.props.value ) {
+			return;
+		}
+		if ( this.props.editing && this.props.multiple ) {
+			console.log('I was triggered during editing');
+			this.props.value.map( editMedia );
+		} else {
+			editMedia( this.props.value );
+		}
+
+		if ( this.props.multiple && ! this.props.editing ) {
+			console.log('I was triggered during editing...I shouldnt have and I feel bad');
+			this.props.value.map( addMedia );
+		} else {
+			addMedia( this.props.value );
+		}
+	}
+
 
 	openModal() {
 		this.frame.open();
@@ -153,4 +213,3 @@ class MediaUpload extends Component {
 }
 
 export default MediaUpload;
-
