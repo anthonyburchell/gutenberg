@@ -38,14 +38,10 @@ const getGalleryDetailsMediaFrame = () => {
 				} ),
 
 				new wp.media.controller.GalleryEdit( {
-					// library: this.options.selection,
+					library: this.options.selection,
 					editing: this.options.editing,
 					menu: 'gallery',
 					displaySettings: false,
-					library: wp.media.query( _.defaults( {
-						type: 'image',
-					}, this.options.library ) ),
-
 				} ),
 
 				new wp.media.controller.GalleryAdd(),
@@ -70,7 +66,6 @@ class MediaUpload extends Component {
 		this.onSelect = this.onSelect.bind( this );
 		this.onUpdate = this.onUpdate.bind( this );
 		this.onOpen = this.onOpen.bind( this );
-		this.onEdit = this.onEdit.bind( this );
 		const frameConfig = {
 			title,
 			button: {
@@ -111,7 +106,6 @@ class MediaUpload extends Component {
 		this.frame.on( 'select', this.onSelect );
 		this.frame.on( 'update', this.onUpdate );
 		this.frame.on( 'open', this.onOpen );
-		this.frame.on( 'edit', this.onEdit );
 	}
 
 	componentWillUnmount() {
@@ -147,61 +141,16 @@ class MediaUpload extends Component {
 			attachment.fetch();
 			selection.add( attachment );
 		};
-		const editMedia = ( id ) => {
-			const attachment = wp.media.attachment( id );
-			attachment.fetch();
-			selection.add( attachment );
-		}
 
 		if ( ! this.props.value ) {
 			return;
 		}
-		if ( this.props.editing && this.props.multiple ) {
-			console.log('I was triggered during editing');
-			this.props.value.map( editMedia );
-		} else {
-			editMedia( this.props.value );
-		}
-
-		if ( this.props.multiple && ! this.props.editing ) {
-			console.log('I was triggered during editing...I shouldnt have and I feel bad');
+		if ( this.props.editing ) {
 			this.props.value.map( addMedia );
 		} else {
 			addMedia( this.props.value );
 		}
 	}
-
-	onEdit() {
-		const selection = this.frame.state().get( 'selection' );
-		const addMedia = ( id ) => {
-			const attachment = wp.media.attachment( id );
-			attachment.fetch();
-			selection.add( attachment );
-		};
-		const editMedia = ( id ) => {
-			const attachment = wp.media.attachment( id );
-			attachment.fetch();
-			selection.add( attachment );
-		}
-
-		if ( ! this.props.value ) {
-			return;
-		}
-		if ( this.props.editing && this.props.multiple ) {
-			console.log('I was triggered during editing');
-			this.props.value.map( editMedia );
-		} else {
-			editMedia( this.props.value );
-		}
-
-		if ( this.props.multiple && ! this.props.editing ) {
-			console.log('I was triggered during editing...I shouldnt have and I feel bad');
-			this.props.value.map( addMedia );
-		} else {
-			addMedia( this.props.value );
-		}
-	}
-
 
 	openModal() {
 		this.frame.open();
