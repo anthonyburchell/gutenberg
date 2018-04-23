@@ -8,6 +8,7 @@ import { filter, pick } from 'lodash';
  */
 import { Component, Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { mediaUpload } from '@wordpress/utils';
 import {
 	IconButton,
 	DropZone,
@@ -22,7 +23,6 @@ import {
 /**
  * Internal dependencies
  */
-import editorMediaUpload from '../../editor-media-upload';
 import MediaUpload from '../../media-upload';
 import ImagePlaceholder from '../../image-placeholder';
 import InspectorControls from '../../inspector-controls';
@@ -133,7 +133,7 @@ class GalleryBlock extends Component {
 	addFiles( files ) {
 		const currentImages = this.props.attributes.images || [];
 		const { setAttributes } = this.props;
-		editorMediaUpload(
+		mediaUpload(
 			files,
 			( images ) => {
 				setAttributes( {
@@ -157,6 +157,7 @@ class GalleryBlock extends Component {
 	render() {
 		const { attributes, isSelected, className } = this.props;
 		const { images, columns = defaultColumnsNumber( attributes ), align, imageCrop, linkTo } = attributes;
+
 		const dropZone = (
 			<DropZone
 				onFilesDrop={ this.addFiles }
@@ -164,51 +165,6 @@ class GalleryBlock extends Component {
 		);
 
 		const controls = (
-<<<<<<< HEAD
-			isSelected && (
-				<BlockControls key="controls">
-					<BlockAlignmentToolbar
-						value={ align }
-						onChange={ this.updateAlignment }
-					/>
-					{ !! images.length && (
-						<Toolbar>
-							<MediaUpload
-								onSelect={ this.onSelectImages }
-								type="image"
-								gallery
-								multiple
-								editing
-								value={ images.map( ( img ) => img.id ) }
-								render={ ( { open } ) => (
-									<IconButton
-										className="components-toolbar__control"
-										label={ __( 'Edit Gallery' ) }
-										value={ images.map( ( img ) => img.id ) }
-										icon="edit"
-										onClick={ open }
-									/>
-								) }
-							/>
-						</Toolbar>
-					) }
-				</BlockControls>
-			)
-		);
-
-		if ( images.length === 0 ) {
-			return [
-				controls,
-				<ImagePlaceholder key="gallery-placeholder"
-					className={ className }
-					icon="format-gallery"
-					label={ __( 'Gallery' ) }
-					onSelectImage={ this.onSelectImages }
-					multiple
-					gallery
-				/>,
-			];
-=======
 			<BlockControls>
 				<BlockAlignmentToolbar
 					value={ align }
@@ -249,7 +205,6 @@ class GalleryBlock extends Component {
 					/>
 				</Fragment>
 			);
->>>>>>> eee927878b27198bf19388a2d4add77b15cbc510
 		}
 
 		return (
