@@ -6,14 +6,21 @@
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { Placeholder, Toolbar, IconButton, Button } from '@wordpress/components';
-import { Component } from '@wordpress/element';
+import {
+	Button,
+	FormFileUpload,
+	IconButton,
+	Placeholder,
+	Toolbar,
+} from '@wordpress/components';
+import { Component, Fragment } from '@wordpress/element';
 
 /**
  * Internal dependencies
  */
 import './style.scss';
 import './editor.scss';
+import editorMediaUpload from '../../editor-media-upload';
 import MediaUpload from '../../media-upload';
 import RichText from '../../rich-text';
 import BlockControls from '../../block-controls';
@@ -52,27 +59,26 @@ export const settings = {
 
 	getEditWrapperProps( attributes ) {
 		const { align } = attributes;
-		if ( 'left' === align || 'right' === align || 'wide' === align || 'full' === align ) {
+		if ( 'left' === align || 'center' === align || 'right' === align || 'wide' === align || 'full' === align ) {
 			return { 'data-align': align };
 		}
 	},
 
 	edit: class extends Component {
-		constructor( { className } ) {
+		constructor() {
 			super( ...arguments );
 			// edit component has its own src in the state so it can be edited
 			// without setting the actual value outside of the edit UI
 			this.state = {
 				editing: ! this.props.attributes.src,
 				src: this.props.attributes.src,
-				className,
 			};
 		}
 
 		render() {
 			const { align, caption, id } = this.props.attributes;
-			const { setAttributes, isSelected } = this.props;
-			const { editing, className, src } = this.state;
+			const { setAttributes, isSelected, className } = this.props;
+			const { editing, src } = this.state;
 			const updateAlignment = ( nextAlign ) => setAttributes( { align: nextAlign } );
 			const switchToEditing = () => {
 				this.setState( { editing: true } );
@@ -94,76 +100,90 @@ export const settings = {
 				}
 				return false;
 			};
-			const controls = isSelected && (
-				<BlockControls key="controls">
+			const setVideo = ( [ audio ] ) => onSelectVideo( audio );
+			const uploadFromFiles = ( event ) => editorMediaUpload( event.target.files, setVideo, 'video' );
+			const controls = (
+				<BlockControls>
 					<BlockAlignmentToolbar
 						value={ align }
 						onChange={ updateAlignment }
 					/>
-					<Toolbar>
-						<IconButton
-							className="components-icon-button components-toolbar__control"
-							label={ __( 'Edit video' ) }
-							onClick={ switchToEditing }
-							icon="edit"
-						/>
-					</Toolbar>
+					{ ! editing && (
+						<Toolbar>
+							<IconButton
+								className="components-icon-button components-toolbar__control"
+								label={ __( 'Edit video' ) }
+								onClick={ switchToEditing }
+								icon="edit"
+							/>
+						</Toolbar>
+					) }
 				</BlockControls>
 			);
 
 			if ( editing ) {
-				return [
-					controls,
-					<Placeholder
-						key="placeholder"
-						icon="media-video"
-						label={ __( 'Video' ) }
-						instructions={ __( 'Select a video file from your library, or upload a new one' ) }
-						className={ className }>
-						<form onSubmit={ onSelectUrl }>
-							<input
-								type="url"
-								className="components-placeholder__input"
-								placeholder={ __( 'Enter URL of video file here…' ) }
-								onChange={ event => this.setState( { src: event.target.value } ) }
-								value={ src || '' } />
-							<Button
-								isLarge
-								type="submit">
-								{ __( 'Use URL' ) }
-							</Button>
-						</form>
-						<MediaUpload
-							onSelect={ onSelectVideo }
-							type="video"
-							id={ id }
-							render={ ( { open } ) => (
-								<Button isLarge onClick={ open } >
-									{ __( 'Add from Media Library' ) }
+				return (
+					<Fragment>
+						{ controls }
+						<Placeholder
+							icon="media-video"
+							label={ __( 'Video' ) }
+							instructions={ __( 'Select a video file from your library, or upload a new one' ) }
+							className={ className }>
+							<form onSubmit={ onSelectUrl }>
+								<input
+									type="url"
+									className="components-placeholder__input"
+									placeholder={ __( 'Enter URL of video file here…' ) }
+									onChange={ ( event ) => this.setState( { src: event.target.value } ) }
+									value={ src || '' } />
+								<Button
+									isLarge
+									type="submit">
+									{ __( 'Use URL' ) }
 								</Button>
-							) }
-						/>
-					</Placeholder>,
-				];
+							</form>
+							<FormFileUpload
+								isLarge
+								className="wp-block-video__upload-button"
+								onChange={ uploadFromFiles }
+								accept="video/*"
+							>
+								{ __( 'Upload' ) }
+							</FormFileUpload>
+							<MediaUpload
+								onSelect={ onSelectVideo }
+								type="video"
+								id={ id }
+								render={ ( { open } ) => (
+									<Button isLarge onClick={ open } >
+										{ __( 'Media Library' ) }
+									</Button>
+								) }
+							/>
+						</Placeholder>
+					</Fragment>
+				);
 			}
 
 			/* eslint-disable jsx-a11y/no-static-element-interactions, jsx-a11y/onclick-has-role, jsx-a11y/click-events-have-key-events */
-			return [
-				controls,
-				<figure key="video" className={ className }>
-					<video controls src={ src } />
-					{ ( ( caption && caption.length ) || isSelected ) && (
-						<RichText
-							tagName="figcaption"
-							placeholder={ __( 'Write caption…' ) }
-							value={ caption }
-							onChange={ ( value ) => setAttributes( { caption: value } ) }
-							isSelected={ isSelected }
-							inlineToolbar
-						/>
-					) }
-				</figure>,
-			];
+			return (
+				<Fragment>
+					{ controls }
+					<figure className={ className }>
+						<video controls src={ src } />
+						{ ( ( caption && caption.length ) || isSelected ) && (
+							<RichText
+								tagName="figcaption"
+								placeholder={ __( 'Write caption…' ) }
+								value={ caption }
+								onChange={ ( value ) => setAttributes( { caption: value } ) }
+								inlineToolbar
+							/>
+						) }
+					</figure>
+				</Fragment>
+			);
 			/* eslint-enable jsx-a11y/no-static-element-interactions, jsx-a11y/onclick-has-role, jsx-a11y/click-events-have-key-events */
 		}
 	},

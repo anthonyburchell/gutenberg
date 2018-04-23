@@ -18,7 +18,7 @@ export const settings = {
 
 	description: __( 'A shortcode is a WordPress-specific code snippet that is written between square brackets as [shortcode]. ' ),
 
-	icon: 'marker',
+	icon: 'shortcode',
 
 	category: 'widgets',
 
@@ -49,6 +49,7 @@ export const settings = {
 						},
 					},
 				},
+				priority: 20,
 			},
 		],
 	},
@@ -66,10 +67,11 @@ export const settings = {
 			return (
 				<div className="wp-block-shortcode">
 					<label htmlFor={ inputId }>
-						<Dashicon icon="editor-code" />
+						<Dashicon icon="shortcode" />
 						{ __( 'Shortcode' ) }
 					</label>
 					<PlainText
+						className="input-control"
 						id={ inputId }
 						value={ attributes.text }
 						placeholder={ __( 'Write shortcode here…' ) }
