@@ -173,12 +173,14 @@ class GalleryBlock extends Component {
 								onSelect={ this.onSelectImages }
 								type="image"
 								gallery
+								multiple
 								editing
 								value={ images.map( ( img ) => img.id ) }
 								render={ ( { open } ) => (
 									<IconButton
 										className="components-toolbar__control"
 										label={ __( 'Edit Gallery' ) }
+										value={ images.map( ( img ) => img.id ) }
 										icon="edit"
 										onClick={ open }
 									/>

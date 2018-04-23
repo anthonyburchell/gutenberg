@@ -47,7 +47,6 @@ const getGalleryDetailsMediaFrame = () => {
 				new wp.media.controller.GalleryAdd(),
 
 			] );
-
 		},
 	} );
 };
@@ -81,10 +80,20 @@ class MediaUpload extends Component {
 		if ( gallery ) {
 			const GalleryDetailsMediaFrame = getGalleryDetailsMediaFrame();
 			if ( editing ) {
+				const selection = [];
+				const addMedia = ( id ) => {
+					const attachment = wp.media.attachment( id );
+					attachment.fetch();
+					selection.add( attachment );
+				};
+
+				this.props.value.map( addMedia );
+
 				this.frame = new GalleryDetailsMediaFrame( {
-					frame: 'manage',
+					frame: 'select',
 					mimeType: type,
 					state: 'gallery-edit',
+					library: this.options.selection,
 				} );
 			} else {
 				this.frame = new GalleryDetailsMediaFrame( {
