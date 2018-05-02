@@ -9,7 +9,7 @@ import {
 	Placeholder,
 	Toolbar,
 } from '@wordpress/components';
-import { flatMap } from 'lodash';
+import { pick } from 'lodash';
 import { Component, Fragment } from '@wordpress/element';
 import {
 	editorMediaUpload,
@@ -37,12 +37,12 @@ export const settings = {
 
 	attributes: {
 		tracks: {
+			default: [],
 			type: 'array',
 			shortcode: ( { named: { ids } } ) => {
 				if ( ! ids ) {
 					return [];
 				}
-
 				return ids.split( ',' ).map( ( id ) => ( {
 					id: parseInt( id, 10 ),
 				} ) );
@@ -80,7 +80,7 @@ export const settings = {
 		}
 
 		render() {
-			const { caption, id } = this.props.attributes;
+			const { caption, id, tracks } = this.props.attributes;
 			const { setAttributes, isSelected, className } = this.props;
 			const { editing, src } = this.state;
 			const switchToEditing = () => {
@@ -91,14 +91,16 @@ export const settings = {
 
 					media = ( 1 < media.length ) ? media : [ media ];
 
-					if ( media ) {
-						media.map( ( media ) => {
-							console.log ( media.url );
-						} );
-					}
+					// if ( media ) {
+					// 	this.setState( { src: media[0].url, editing: false } );
+					// 	return { tracks: media.map( ( item ) => pick( item, [ 'url', 'id' ] ) ) };
+					// 	// media.map( ( media ) => {
+					// 	// 	console.log ( media.url );
+					// 	// } );
+					// }
 					// sets the block's attribute and updates the edit component from the
 					// selected media, then switches off the editing UI
-					setAttributes( { src: media.url, id: media.id } );
+					setAttributes( { tracks: media.map( ( item ) => pick( item, [ 'url', 'id' ] ) ) } );
 					this.setState( { src: media.url, editing: false } );
 				}
 			};
@@ -173,6 +175,7 @@ export const settings = {
 					</BlockControls>
 					<figure className={ className }>
 						<audio controls="controls" src={ src } />
+						{ console.log( tracks ) }
 						{ ( ( caption && caption.length ) || !! isSelected ) && (
 							<RichText
 								tagName="figcaption"
