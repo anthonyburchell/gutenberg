@@ -8,6 +8,7 @@ import {
 	IconButton,
 	Placeholder,
 	Toolbar,
+	MediaElement,
 } from '@wordpress/components';
 import { pick } from 'lodash';
 import { Component, Fragment } from '@wordpress/element';
@@ -39,6 +40,7 @@ export const settings = {
 		tracks: {
 			default: [],
 			type: 'array',
+			source: 'query',
 			shortcode: ( { named: { ids } } ) => {
 				if ( ! ids ) {
 					return [];
@@ -90,17 +92,8 @@ export const settings = {
 				if ( media && media[0].url ) {
 
 					media = ( 1 < media.length ) ? media : [ media ];
-
-					// if ( media ) {
-					// 	this.setState( { src: media[0].url, editing: false } );
-					// 	return { tracks: media.map( ( item ) => pick( item, [ 'url', 'id' ] ) ) };
-					// 	// media.map( ( media ) => {
-					// 	// 	console.log ( media.url );
-					// 	// } );
-					// }
-					// sets the block's attribute and updates the edit component from the
-					// selected media, then switches off the editing UI
-					setAttributes( { tracks: media.map( ( item ) => pick( item, [ 'url', 'id' ] ) ) } );
+					console.log( media );
+					setAttributes( { tracks: media.map( ( item ) => pick( item, [ 'url', 'id', 'type',  ] ) ) } );
 					this.setState( { src: media.url, editing: false } );
 				}
 			};
@@ -174,17 +167,19 @@ export const settings = {
 						</Toolbar>
 					</BlockControls>
 					<figure className={ className }>
-						<audio controls="controls" src={ src } />
+					<MediaElement
+					 id="player1"
+					 mediaType="audio"
+					 preload="auto"
+					 controls
+					 width="640"
+					 height="360"
+					 poster=""
+					 sources={JSON.stringify(tracks)}
+					 options={JSON.stringify(tracks)}
+					 tracks={JSON.stringify(tracks)}
+					/>
 						{ console.log( tracks ) }
-						{ ( ( caption && caption.length ) || !! isSelected ) && (
-							<RichText
-								tagName="figcaption"
-								placeholder={ __( 'Write caption…' ) }
-								value={ caption }
-								onChange={ ( value ) => setAttributes( { caption: value } ) }
-								inlineToolbar
-							/>
-						) }
 					</figure>
 				</Fragment>
 			);
@@ -193,11 +188,21 @@ export const settings = {
 	},
 
 	save( { attributes } ) {
-		const { src, caption } = attributes;
+		const { src, caption, tracks } = attributes;
 		return (
 			<figure>
-				<audio controls="controls" src={ src } />
-				{ caption && caption.length > 0 && <RichText.Content tagName="figcaption" value={ caption } /> }
+			<MediaElement
+			 id="player1"
+			 mediaType="audio"
+			 preload="auto"
+			 controls
+			 width="640"
+			 height="360"
+			 poster=""
+			 sources={JSON.stringify(tracks)}
+			 options={JSON.stringify(tracks)}
+			 tracks={JSON.stringify(tracks)}
+			/>
 			</figure>
 		);
 	},

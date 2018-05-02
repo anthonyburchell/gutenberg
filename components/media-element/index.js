@@ -17,21 +17,34 @@ export default class MediaElement extends Component {
 	}
 
 	render() {
-		const
+    const
 			props = this.props,
-			sources = JSON.parse( props.sources ),
-			tracks = JSON.parse( props.tracks ),
+			sources = JSON.parse(props.sources),
+			tracks = JSON.parse(props.tracks),
 			sourceTags = [],
-			tracksTags = [],
-			mediaBody = `${ sourceTags.join( '\n' ) }
-				${ tracksTags.join( '\n' ) }`,
+			tracksTags = []
+		;
+
+		for (let i = 0, total = sources.length; i < total; i++) {
+			const source = sources[i];
+			sourceTags.push(`<source src="${source.url}" type="${source.type}">`);
+		}
+
+		// for (let i = 0, total = tracks.length; i < total; i++) {
+		// 	const track = tracks[i];
+		// 	tracksTags.push(`<track src="${track.url}" kind="${track.type}" srclang="${track.lang}"${(track.label ? ` label=${track.label}` : '')}>`);
+		// }
+
+		const
+			mediaBody = `${sourceTags.join("\n")}
+				${tracksTags.join("\n")}`,
 			mediaHtml = props.mediaType === 'video' ?
-				`<video id="${ props.id }" width="${ props.width }" height="${ props.height }"${ ( props.poster ? ` poster=${ props.poster }` : '' ) }
-					${ ( props.controls ? ' controls' : '' ) }${ ( props.preload ? ` preload="${ props.preload }"` : '' ) }>
-					${ mediaBody }
+				`<video id="${props.id}" width="${props.width}" height="${props.height}"${(props.poster ? ` poster=${props.poster}` : '')}
+					${(props.controls ? ' controls' : '')}${(props.preload ? ` preload="${props.preload}"` : '')}>
+					${mediaBody}
 				</video>` :
-				`<audio id="${ props.id }" width="${ props.width }" src="${ sources.url }" controls>
-					${ mediaBody }
+				`<audio id="${props.id}" width="${props.width}" controls>
+					${mediaBody}
 				</audio>`
 		;
 
