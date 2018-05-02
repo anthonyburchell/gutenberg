@@ -9,6 +9,7 @@ import {
 	Placeholder,
 	Toolbar,
 } from '@wordpress/components';
+import { flatMap } from 'lodash';
 import { Component, Fragment } from '@wordpress/element';
 import {
 	editorMediaUpload,
@@ -23,18 +24,30 @@ import {
 import './style.scss';
 import './editor.scss';
 
-export const name = 'core/audio';
+export const name = 'core/playlist';
 
 export const settings = {
-	title: __( 'Audio' ),
+	title: __( 'Playlist' ),
 
-	description: __( 'The Audio block allows you to embed audio files and play them back using a simple player.' ),
+	description: __( 'The Playlist block allows you to embed playlist files and play them back using the mediaElement player component.' ),
 
 	icon: 'format-audio',
 
 	category: 'common',
 
 	attributes: {
+		tracks: {
+			type: 'array',
+			shortcode: ( { named: { ids } } ) => {
+				if ( ! ids ) {
+					return [];
+				}
+
+				return ids.split( ',' ).map( ( id ) => ( {
+					id: parseInt( id, 10 ),
+				} ) );
+			},
+		},
 		src: {
 			type: 'string',
 			source: 'attribute',
@@ -74,7 +87,15 @@ export const settings = {
 				this.setState( { editing: true } );
 			};
 			const onSelectAudio = ( media ) => {
-				if ( media && media.url ) {
+				if ( media && media[0].url ) {
+
+					media = ( 1 < media.length ) ? media : [ media ];
+
+					if ( media ) {
+						media.map( ( media ) => {
+							console.log ( media.url );
+						} );
+					}
 					// sets the block's attribute and updates the edit component from the
 					// selected media, then switches off the editing UI
 					setAttributes( { src: media.url, id: media.id } );
@@ -124,6 +145,8 @@ export const settings = {
 						<MediaUpload
 							onSelect={ onSelectAudio }
 							type="audio"
+							multiple
+							playlist
 							value={ id }
 							render={ ( { open } ) => (
 								<Button isLarge onClick={ open }>
