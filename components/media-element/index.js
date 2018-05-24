@@ -21,9 +21,12 @@ export default class MediaElement extends Component {
 			props = this.props,
 			sources = JSON.parse(props.sources),
 			tracks = JSON.parse(props.tracks),
+
 			sourceTags = [],
-			tracksTags = []
+			tracksTags = [],
+			bodySource = []
 		;
+
 
 		for (let i = 0, total = sources.length; i < total; i++) {
 			const source = sources[i];
@@ -58,15 +61,14 @@ export default class MediaElement extends Component {
 			return;
 		}
 
-		if ( typeof this.props.options !== 'undefined' ) {
 			const options = Object.assign( {}, JSON.parse( this.props.options ), {
-				//pluginPath: './static/media/',
-				//success: ( media, node, instance ) => this.success( media, node, instance ),
-				//error: ( media, node ) => this.error( media, node ),
+				// pluginPath: './static/media/',
+				success: ( media, node, instance ) => this.success( media, node, instance ),
+				error: ( media, node ) => this.error( media, node ),
 			} );
 			this.setState( { player: new MediaElementPlayer( this.props.id, options ) } );
 			return;
-		}
+
 		this.setState( { player: new MediaElementPlayer( this.props.id, this.props.options ) } );
 	}
 

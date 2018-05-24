@@ -38,17 +38,24 @@ export const settings = {
 
 	attributes: {
 		tracks: {
-			default: [],
 			type: 'array',
-			source: 'query',
-			shortcode: ( { named: { ids } } ) => {
-				if ( ! ids ) {
-					return [];
-				}
-				return ids.split( ',' ).map( ( id ) => ( {
-					id: parseInt( id, 10 ),
-				} ) );
+			source: 'attribute',
+			query: {
+				url: {
+					source: 'attribute',
+					attribute: 'url',
+				},
+				id: {
+					type: 'number',
+					source: 'attribute',
+					attribute: 'data-id',
+				},
+				type: {
+					source: 'attribute',
+					selector: 'figcaption',
+				},
 			},
+
 		},
 		src: {
 			type: 'string',
@@ -92,7 +99,7 @@ export const settings = {
 				if ( media && media[0].url ) {
 
 					media = ( 1 < media.length ) ? media : [ media ];
-					console.log( media );
+					// console.log( media );
 					setAttributes( { tracks: media.map( ( item ) => pick( item, [ 'url', 'id', 'type',  ] ) ) } );
 					this.setState( { src: media.url, editing: false } );
 				}
@@ -108,6 +115,7 @@ export const settings = {
 			};
 			const setAudio = ( [ audio ] ) => onSelectAudio( audio );
 			const uploadFromFiles = ( event ) => editorMediaUpload( event.target.files, setAudio, 'audio' );
+			const config = {};
 
 			if ( editing ) {
 				return (
@@ -176,7 +184,7 @@ export const settings = {
 					 height="360"
 					 poster=""
 					 sources={JSON.stringify(tracks)}
-					 options={JSON.stringify(tracks)}
+					 options={JSON.stringify(config)}
 					 tracks={JSON.stringify(tracks)}
 					/>
 						{ console.log( tracks ) }
@@ -189,6 +197,10 @@ export const settings = {
 
 	save( { attributes } ) {
 		const { src, caption, tracks } = attributes;
+		const config = {};
+
+		console.log( tracks, config );
+
 		return (
 			<figure>
 			<MediaElement
@@ -200,7 +212,7 @@ export const settings = {
 			 height="360"
 			 poster=""
 			 sources={JSON.stringify(tracks)}
-			 options={JSON.stringify(tracks)}
+			 options={JSON.stringify(config)}
 			 tracks={JSON.stringify(tracks)}
 			/>
 			</figure>
